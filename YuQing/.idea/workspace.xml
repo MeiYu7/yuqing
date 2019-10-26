@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b66c107d-387f-46d3-a143-6b5245182310" name="Default" comment="">
+    <list default="true" id="b66c107d-387f-46d3-a143-6b5245182310" name="Default" comment="删除settings文件里的多余内容">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/YuQing/settings/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/YuQing/settings/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/YuQing/extensions/corestats.py" beforeDir="false" afterPath="$PROJECT_DIR$/YuQing/extensions/corestats.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/YuQing/items.py" beforeDir="false" afterPath="$PROJECT_DIR$/YuQing/items.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/YuQing/middlewares.py" beforeDir="false" afterPath="$PROJECT_DIR$/YuQing/middlewares.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/YuQing/utils/news_xpath2_1.csv" beforeDir="false" afterPath="$PROJECT_DIR$/YuQing/utils/news_xpath2_1.csv" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -44,7 +47,7 @@
     <property name="js.eslint.eslintPackage" value="" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path" value="node" />
-    <property name="settings.editor.selected.configurable" value="vcs.Git" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -182,7 +185,7 @@
     </recent_temporary>
   </component>
   <component name="SvnConfiguration">
-    <configuration />
+    <configuration>C:\Users\myq91\AppData\Roaming\Subversion</configuration>
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -196,8 +199,16 @@
       <workItem from="1571823621985" duration="1665000" />
       <workItem from="1571884029150" duration="1562000" />
       <workItem from="1571887267561" duration="6150000" />
-      <workItem from="1571905228400" duration="2791000" />
+      <workItem from="1571905228400" duration="13878000" />
     </task>
+    <task id="LOCAL-00001" summary="删除settings文件里的多余内容">
+      <created>1571909625270</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1571909625270</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -216,6 +227,10 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="删除settings文件里的多余内容" />
+    <option name="LAST_COMMIT_MESSAGE" value="删除settings文件里的多余内容" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

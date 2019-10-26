@@ -213,7 +213,7 @@ class StatCollectorMiddleware(object):
         item['finish_reason'] = stats.get("finish_reason")
         item['item_scraped_count'] = stats.get("item_scraped_count")
         item['item_dropped_count'] = stats.get("item_dropped_count")
-        item['item_dropped_reasons_count'] = stats.get("item_dropped_reasons_count")
+        # item['item_dropped_reasons_count'] = stats.get("item_dropped_reasons_count")
         item['response_received_count'] = stats.get("response_received_count")
         item["finaly_insert_item"] = stats.get("finaly_insert_item")
         item["finaly_find_ids"] = stats.get("finaly_find_ids")
