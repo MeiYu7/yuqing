@@ -28,7 +28,7 @@ class NewsItem(Item):
 
     news_read_num = Field()  # 阅读人数
     news_comments_num = Field()  # 评论人数
-    news_comments = Field()  # 新闻评论内容
+    news_comments = Field(input_processor=Compose(deal_comment))  # 新闻评论内容
     plan_name = Field()
 
     crawler_number = Field()  # 爬虫次数，最多3次
@@ -45,9 +45,10 @@ class CommentsItem(Item):
     support_count = Field()  # 评论支持数(点赞)
     against_count = Field()  # 评论反对数(踩)
     reviewers_id = Field()  # 评论者id
+    reviewers_addr = Field()  # 评论者所属地
     reviewers_nickname = Field()  # 评论者昵称
-    ip_loc = Field()  # 评论者ip
-    ip_addr = Field()  # 评论者所属地
+    # ip_loc = Field()  # 评论者ip
+
     parent_id = Field()  # 父级评论id串，以减号"-"相隔
 
 

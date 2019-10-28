@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b66c107d-387f-46d3-a143-6b5245182310" name="Default" comment="新增舆情方案添加的脚本 在utils文件中">
+    <list default="true" id="b66c107d-387f-46d3-a143-6b5245182310" name="Default" comment="新增tencent.py评论url获取">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/YuQing/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/YuQing/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/YuQing/settings/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/YuQing/settings/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/YuQing/spiders/sogou.py" beforeDir="false" afterPath="$PROJECT_DIR$/YuQing/spiders/sogou.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/YuQing/items.py" beforeDir="false" afterPath="$PROJECT_DIR$/YuQing/items.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/YuQing/loaders/loader.py" beforeDir="false" afterPath="$PROJECT_DIR$/YuQing/loaders/loader.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/YuQing/loaders/processors.py" beforeDir="false" afterPath="$PROJECT_DIR$/YuQing/loaders/processors.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/YuQing/spiders/tencent.py" beforeDir="false" afterPath="$PROJECT_DIR$/YuQing/spiders/tencent.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/YuQing/utils/add_yuqing_plans.py" beforeDir="false" afterPath="$PROJECT_DIR$/YuQing/utils/add_yuqing_plans.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/YuQing/utils/format_time.py" beforeDir="false" afterPath="$PROJECT_DIR$/YuQing/utils/format_time.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -227,7 +227,7 @@
       <workItem from="1571884029150" duration="1562000" />
       <workItem from="1571887267561" duration="6150000" />
       <workItem from="1571905228400" duration="18252000" />
-      <workItem from="1572226591234" duration="6567000" />
+      <workItem from="1572226591234" duration="19456000" />
     </task>
     <task id="LOCAL-00001" summary="删除settings文件里的多余内容">
       <created>1571909625270</created>
@@ -250,7 +250,14 @@
       <option name="project" value="LOCAL" />
       <updated>1572071983068</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="新增tencent.py评论url获取">
+      <created>1572235256221</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1572235256221</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -276,7 +283,8 @@
     <MESSAGE value="删除settings文件里的多余内容" />
     <MESSAGE value="修改&amp;新增部分字段名称" />
     <MESSAGE value="新增舆情方案添加的脚本 在utils文件中" />
-    <option name="LAST_COMMIT_MESSAGE" value="新增舆情方案添加的脚本 在utils文件中" />
+    <MESSAGE value="新增tencent.py评论url获取" />
+    <option name="LAST_COMMIT_MESSAGE" value="新增tencent.py评论url获取" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -291,6 +299,6 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/YuQing$add_yuqing_plans.coverage" NAME="add_yuqing_plans Coverage Results" MODIFIED="1572072052268" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/YuQing/utils" />
-    <SUITE FILE_PATH="coverage/YuQing$main__1_.coverage" NAME="main (1) Coverage Results" MODIFIED="1572233516931" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/YuQing" />
+    <SUITE FILE_PATH="coverage/YuQing$main__1_.coverage" NAME="main (1) Coverage Results" MODIFIED="1572258966483" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/YuQing" />
   </component>
 </project>

@@ -1,17 +1,21 @@
 import re
-from YuQing.utils.format_time import format_time
+from YuQing.utils.format_time import FormatTime
+
 
 def str_replace(values):
     if isinstance(values, list):
         values = values[0]
         values = re.sub(r"\s", " ", values)
-    value = re.sub(r'[0-9a-zA-Z_（）\(\)]+|来源:|责任编辑：|原标题：|\u3000|\u200b|\u200b|\xa0|返回搜狐，查看更多|扫一扫，用手机看新闻！|用微信扫描还可以|分享至好友和朋友圈|相关视频：|\[|\]|[\n\t\r]+ ',"",values).strip()
+    value = re.sub(
+        r'[0-9a-zA-Z_（）\(\)]+|来源:|责任编辑：|原标题：|\u3000|\u200b|\u200b|\xa0|返回搜狐，查看更多|扫一扫，用手机看新闻！|用微信扫描还可以|分享至好友和朋友圈|相关视频：|\[|\]|[\n\t\r]+ ',
+        "", values).strip()
     return value
+
 
 def delete_blank(values):
     """删除空格"""
     if isinstance(values, list):
-        if len(values)>0 and values[0].startswith("[") and values[0].endswith("]"):
+        if len(values) > 0 and values[0].startswith("[") and values[0].endswith("]"):
             try:
                 return " ".join([str_replace(v.strip()) for v in eval(values[0])])
             except:
@@ -20,15 +24,22 @@ def delete_blank(values):
             return " ".join([str_replace(v.strip()) for v in values])
 
 
-split_url = lambda x:x.split("/")[2]
+split_url = lambda x: x.split("/")[2]
 
-def deal_author(values,loader_context):
+
+def deal_comment(values):
+    new_values = []
+    new_values.append(values)
+    return new_values
+
+
+def deal_author(values, loader_context):
     author_name = set()
     if isinstance(values, list):
         for value in values:
-            if len(value)>30:
+            if len(value) > 30:
                 value = re.findall(r'[(（]记者(.*?)[)）]', value)
-                if len(value)>0:
+                if len(value) > 0:
                     author_name.add(value[0])
             else:
                 if '记者' in value:
@@ -40,14 +51,14 @@ def deal_author(values,loader_context):
 
     return ''.join(list(author_name))
 
+
 def deal_time(values):
     value = values
     if isinstance(values, list):
-        if len(values)>0:
+        if len(values) > 0:
             values = values[0]
             values = re.sub(r"\s", " ", values)
-            value = re.sub(r'来源|[\[\]\n\t\r]+|\u3000|\u200b|\u200b|：',"",values).strip()
-            value = format_time(value)
+            value = re.sub(r'来源|[\[\]\n\t\r]+|\u3000|\u200b|\u200b|：', "", values).strip()
+            value = FormatTime().format_str_time(value)
 
     return value
-

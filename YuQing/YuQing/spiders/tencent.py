@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
+import json
+from YuQing.utils.format_time import FormatTime
 import scrapy
 from datetime import datetime
 from scrapy import signals
 import re
-from YuQing.items import NewsItem
-from YuQing.loaders.loader import NewsItemLoader
+from YuQing.items import NewsItem, CommentsItem
+from YuQing.loaders.loader import NewsItemLoader, NewsCommentsItemLoader
 
 
 class TencentSpider(scrapy.Spider):
@@ -13,7 +15,8 @@ class TencentSpider(scrapy.Spider):
     # start_urls = ['http://qq.com/']
     sogou_url_temp = 'https://news.sogou.com/news?query={}&sort=1&page={}'  # sort 排序方式
     # souhu_read_url = 'http://v2.sohu.com/public-api/articles/{}/pv'
-    comment_url_temp = 'http://coral.qq.com/{}'
+    comment_num_temp = "https://coral.qq.com/article/{}/commentnum"
+    comment_list_temp = "http://coral.qq.com/article/{}/comment/v2?orinum=30&oriorder=o&cursor={}"
     item = 0
 
     def spider_opened(self):
@@ -58,10 +61,9 @@ class TencentSpider(scrapy.Spider):
 
     def parse_news(self, response):
         new_id = response.request.url.split('/')[-1].split('_')[0]
-
         item_loader = NewsItemLoader(item=NewsItem(), response=response)
         item_loader.add_xpath("news_title", "//h1/text()")
-        # item_loader.add_xpath("news_ori_title", "//article/p[@data-role='original-title']/text()")
+        item_loader.add_xpath("news_ori_title", "//p[contains(text(), '原标题')]/text()")
         item_loader.add_value("news_url", response.request.url)
         item_loader.add_xpath("news_time", "//span[@class='a_time']/text()")
         item_loader.add_value("news_source", response.request.url)
@@ -73,27 +75,54 @@ class TencentSpider(scrapy.Spider):
                               "//div[contains(@class,'content') or @bosszone='content']//p[not(script) and not(style)]//text()")
         item_loader.add_value("news_editor", re.findall(r"editor:'(.*?)'", response.body.decode(response.encoding)))
         item_loader.add_value("news_keyword", re.findall(r"tags:(\[.*?\]),", response.body.decode(response.encoding)))
-
         item = item_loader.load_item()
-        # self.item += 1
-        # # print("===>", item)
-        # # yield item
 
         comment_ids = re.findall(r'cmt_id[ =]+(\d+);|"comment_id": "(\d+)"', response.body.decode(response.encoding))
-        if len(comment_ids)>0:
+        if len(comment_ids) > 0:
             for cmt_id in comment_ids[0]:
                 if cmt_id != "":
-                    print(cmt_id)
-                    cmt_url = self.comment_url_temp.format(cmt_id)
-                    yield scrapy.Request(cmt_url,callback=self.parse_comment,meta={"item": item})
+                    num_url = self.comment_num_temp.format(cmt_id)
+                    yield scrapy.Request(num_url, callback=self.parse_comment_num,
+                                         meta={"item": item, "cmt_id": cmt_id})
 
         else:
             # yield item
             print("本篇新闻没有评论")
             pass
 
+    def parse_comment_num(self, response):
+        data = json.loads(response.body.decode(response.encoding))
+        comment_num = int(data.get("data").get("commentnum"))
+        item_loader = NewsItemLoader(item=response.meta["item"])
+        item_loader.add_value("news_comments_num", comment_num)
+        item = item_loader.load_item()
+
+        yield scrapy.Request(self.comment_list_temp.format(response.meta["cmt_id"],0),
+                             callback=self.parse_comment,
+                             meta={"item": item, "cmt_id": response.meta["cmt_id"]})
+
     def parse_comment(self, response):
         """解析评论"""
         print(response.request.url)
+        item_loader = NewsItemLoader(item=response.meta["item"])
+        data = json.loads(response.body.decode(response.encoding))
+        last_page = data.get("data").get("last")
+        data = data.get("data")
+        comment_list = []
+        for comment in data.get("oriCommList"):
+            cmt_item_loader = NewsItemLoader(item=CommentsItem(), response=response)
+            cmt_item_loader.add_value("comment_id", comment["id"])
+            cmt_item_loader.add_value("parent_id", comment["parent"])
+            cmt_item_loader.add_value("comment_time", FormatTime().format_time_stamp(int(comment["time"])))
+            cmt_item_loader.add_value("content", comment["content"])
+            cmt_item_loader.add_value("support_count", comment["up"])
+            cmt_item_loader.add_value("against_count", "")
+            cmt_item_loader.add_value("reviewers_id", comment["userid"])
+            cmt_item_loader.add_value("reviewers_nickname", data["userList"][comment["userid"]]["nick"])
+            cmt_item_loader.add_value("reviewers_addr", data["userList"][comment["userid"]]["region"].replace(":"," "))
+            cmt_item = cmt_item_loader.load_item()
+            comment_list.append(cmt_item)
 
-
+        item_loader.add_value("news_comments", comment_list)
+        item = item_loader.load_item()
+        print("=====>",item)
