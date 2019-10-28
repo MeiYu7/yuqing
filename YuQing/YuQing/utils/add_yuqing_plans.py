@@ -21,8 +21,7 @@ class AddPlans(object):
         self.col = self._db["plans"]
 
     def add_plan(self):
-        """添加计划"""
-        self.connect_mongo()
+        """添加计划"""; self.connect_mongo()
         data = {
             "plan_name": self.plan_name,
             "areas": self.areas,

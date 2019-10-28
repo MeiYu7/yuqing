@@ -6,12 +6,14 @@ import re
 from YuQing.items import NewsItem
 from YuQing.loaders.loader import NewsItemLoader
 
+
 class TencentSpider(scrapy.Spider):
     name = 'tencent'
-    allowed_domains = ['sogou.com','qq.com']
+    allowed_domains = ['sogou.com', 'qq.com']
     # start_urls = ['http://qq.com/']
     sogou_url_temp = 'https://news.sogou.com/news?query={}&sort=1&page={}'  # sort 排序方式
     # souhu_read_url = 'http://v2.sohu.com/public-api/articles/{}/pv'
+    comment_url_temp = 'http://coral.qq.com/{}'
     item = 0
 
     def spider_opened(self):
@@ -20,7 +22,6 @@ class TencentSpider(scrapy.Spider):
 
     def spider_closed(self):
         print("抓到{}个新闻".format(self.item))
-
 
     @classmethod
     def from_crawler(cls, crawler, *args, **kwargs):
@@ -37,24 +38,23 @@ class TencentSpider(scrapy.Spider):
         pass
 
     def start_requests(self):
-        query_word = 'site:qq.com 扶沟县'
+        query_word = 'site:qq.com 比特币'
         page = 1
-        url = self.sogou_url_temp.format(query_word,page)
+        url = self.sogou_url_temp.format(query_word, page)
         print(url)
-        yield scrapy.Request(url, callback=self.parse)
+        yield scrapy.Request(url, callback=self.parse, dont_filter=True)
 
     def parse(self, response):
         news_list = response.xpath("//div[@class='results']/div//h3/a")
         for a in news_list:
             a_href = a.xpath("./@href").extract_first()
-            yield scrapy.Request(a_href, callback=self.parse_news)
-
+            yield scrapy.Request(a_href, callback=self.parse_news, dont_filter=True)
 
         next_url = response.xpath("//a[@id='sogou_next']/@href").extract_first()
         if next_url:
             next_url = response.urljoin(next_url)
-            print('=====>',next_url)
-            yield scrapy.Request(next_url,callback=self.parse)
+            print('下一页=====>', next_url)
+            yield scrapy.Request(next_url, callback=self.parse, dont_filter=True)
 
     def parse_news(self, response):
         new_id = response.request.url.split('/')[-1].split('_')[0]
@@ -66,13 +66,34 @@ class TencentSpider(scrapy.Spider):
         item_loader.add_xpath("news_time", "//span[@class='a_time']/text()")
         item_loader.add_value("news_source", response.request.url)
         item_loader.add_xpath("news_reported_department", "//span[@class='a_source']//text()")
-        item_loader.add_xpath("news_reporter","//span[@class='a_author']/text()")
-        item_loader.add_xpath("news_content", "//div[contains(@class,'content') or @bosszone='content']//p[not(script) and not(style)]//text()")
-        item_loader.add_xpath("news_content", "//div[contains(@class,'content') or @bosszone='content']//p[not(script) and not(style)]//text()")
+        item_loader.add_xpath("news_reporter", "//span[@class='a_author']/text()")
+        item_loader.add_xpath("news_content",
+                              "//div[contains(@class,'content') or @bosszone='content']//p[not(script) and not(style)]//text()")
+        item_loader.add_xpath("news_content",
+                              "//div[contains(@class,'content') or @bosszone='content']//p[not(script) and not(style)]//text()")
         item_loader.add_value("news_editor", re.findall(r"editor:'(.*?)'", response.body.decode(response.encoding)))
         item_loader.add_value("news_keyword", re.findall(r"tags:(\[.*?\]),", response.body.decode(response.encoding)))
 
         item = item_loader.load_item()
-        self.item +=1
-        print("===>",item)
-        yield item
+        # self.item += 1
+        # # print("===>", item)
+        # # yield item
+
+        comment_ids = re.findall(r'cmt_id[ =]+(\d+);|"comment_id": "(\d+)"', response.body.decode(response.encoding))
+        if len(comment_ids)>0:
+            for cmt_id in comment_ids[0]:
+                if cmt_id != "":
+                    print(cmt_id)
+                    cmt_url = self.comment_url_temp.format(cmt_id)
+                    yield scrapy.Request(cmt_url,callback=self.parse_comment,meta={"item": item})
+
+        else:
+            # yield item
+            print("本篇新闻没有评论")
+            pass
+
+    def parse_comment(self, response):
+        """解析评论"""
+        print(response.request.url)
+
+

@@ -6,6 +6,7 @@ from scrapy import signals
 from YuQing.items import NewsItem
 from YuQing.loaders.loader import NewsItemLoader
 
+
 class SogouSpider(scrapy.Spider):
     name = 'sogou'
     allowed_domains = ['sogou.com','sohu.com']

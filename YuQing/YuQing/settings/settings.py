@@ -68,7 +68,7 @@ EXTENSIONS = {
     'YuQing.extensions.settings.LoaderCustomSettings': 0,
     'YuQing.extensions.db.MonGoDB': 100,
     'YuQing.extensions.corestats.CoreStats': 110,
-    'YuQing.extensions.requst.BeforeFilterRequest': 120,
+    'YuQing.extensions.requst.BeforeFilterRequest': 0,
     'YuQing.extensions.exception.SpiderExceptionExtension': 140,
     'YuQing.extensions.exception.FieldErrorExtension': 160,
 }
