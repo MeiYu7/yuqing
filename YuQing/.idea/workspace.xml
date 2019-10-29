@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b66c107d-387f-46d3-a143-6b5245182310" name="Default" comment="新增tencent.py评论url获取">
+    <list default="true" id="b66c107d-387f-46d3-a143-6b5245182310" name="Default" comment="新增获取评论信息内容，已获取第一页评论">
+      <change afterPath="$PROJECT_DIR$/YuQing/test/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/YuQing/test/add_test_data.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/YuQing/items.py" beforeDir="false" afterPath="$PROJECT_DIR$/YuQing/items.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/YuQing/loaders/loader.py" beforeDir="false" afterPath="$PROJECT_DIR$/YuQing/loaders/loader.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/YuQing/loaders/processors.py" beforeDir="false" afterPath="$PROJECT_DIR$/YuQing/loaders/processors.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/YuQing/pipelines/save_pipelines.py" beforeDir="false" afterPath="$PROJECT_DIR$/YuQing/pipelines/save_pipelines.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/YuQing/spiders/tencent.py" beforeDir="false" afterPath="$PROJECT_DIR$/YuQing/spiders/tencent.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/YuQing/utils/format_time.py" beforeDir="false" afterPath="$PROJECT_DIR$/YuQing/utils/format_time.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/YuQing/spiders/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/YuQing/spiders/test.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -53,17 +55,17 @@
     <property name="settings.editor.selected.configurable" value="preferences.keymap" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\myq91\Desktop\MYQSpiders\YuQing\YuQing\pipelines" />
-      <recent name="C:\Users\myq91\Desktop\MYQSpiders\YuQing\YuQing\lib" />
-      <recent name="C:\Users\myq91\Desktop\MYQSpiders\YuQing\YuQing" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\myq91\Desktop\MYQSpiders\YuQing\YuQing\utils" />
       <recent name="C:\Users\myq91\Desktop\MYQSpiders\YuQing\YuQing\pipelines" />
       <recent name="C:\Users\myq91\Desktop\MYQSpiders\YuQing\YuQing\settings" />
       <recent name="C:\Users\myq91\Desktop\MYQSpiders\YuQing\YuQing" />
       <recent name="C:\Users\myq91\Desktop\MYQSpiders\YuQing" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\myq91\Desktop\MYQSpiders\YuQing\YuQing\pipelines" />
+      <recent name="C:\Users\myq91\Desktop\MYQSpiders\YuQing\YuQing\lib" />
+      <recent name="C:\Users\myq91\Desktop\MYQSpiders\YuQing\YuQing" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -78,7 +80,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.main (1)">
+  <component name="RunManager" selected="Python.add_test_data">
     <configuration default="true" type="tests" factoryName="Attests">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -98,6 +100,28 @@
       <option name="PATTERN" value="" />
       <option name="USE_PATTERN" value="false" />
       <method />
+    </configuration>
+    <configuration name="add_test_data" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="YuQing" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/YuQing/test" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/YuQing/test/add_test_data.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
     </configuration>
     <configuration name="add_yuqing_plans" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="YuQing" />
@@ -165,6 +189,28 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="test (1)" type="PythonConfigurationType" factoryName="Python">
+      <module name="YuQing" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/YuQing/utils" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/YuQing/utils/test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="test" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="YuQing" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -197,17 +243,20 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Python.test (1)" />
       <item itemvalue="Python.main" />
       <item itemvalue="Python.main (1)" />
       <item itemvalue="Python.test" />
       <item itemvalue="Python.add_yuqing_plans" />
+      <item itemvalue="Python.add_test_data" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.add_test_data" />
         <item itemvalue="Python.main (1)" />
+        <item itemvalue="Python.main" />
         <item itemvalue="Python.add_yuqing_plans" />
         <item itemvalue="Python.test" />
-        <item itemvalue="Python.main" />
       </list>
     </recent_temporary>
   </component>
@@ -227,7 +276,7 @@
       <workItem from="1571884029150" duration="1562000" />
       <workItem from="1571887267561" duration="6150000" />
       <workItem from="1571905228400" duration="18252000" />
-      <workItem from="1572226591234" duration="19456000" />
+      <workItem from="1572226591234" duration="42262000" />
     </task>
     <task id="LOCAL-00001" summary="删除settings文件里的多余内容">
       <created>1571909625270</created>
@@ -257,7 +306,14 @@
       <option name="project" value="LOCAL" />
       <updated>1572235256221</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="新增获取评论信息内容，已获取第一页评论">
+      <created>1572259081016</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1572259081016</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -284,7 +340,8 @@
     <MESSAGE value="修改&amp;新增部分字段名称" />
     <MESSAGE value="新增舆情方案添加的脚本 在utils文件中" />
     <MESSAGE value="新增tencent.py评论url获取" />
-    <option name="LAST_COMMIT_MESSAGE" value="新增tencent.py评论url获取" />
+    <MESSAGE value="新增获取评论信息内容，已获取第一页评论" />
+    <option name="LAST_COMMIT_MESSAGE" value="新增获取评论信息内容，已获取第一页评论" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -299,6 +356,9 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/YuQing$add_yuqing_plans.coverage" NAME="add_yuqing_plans Coverage Results" MODIFIED="1572072052268" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/YuQing/utils" />
-    <SUITE FILE_PATH="coverage/YuQing$main__1_.coverage" NAME="main (1) Coverage Results" MODIFIED="1572258966483" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/YuQing" />
+    <SUITE FILE_PATH="coverage/YuQing$main.coverage" NAME="main Coverage Results" MODIFIED="1572328302274" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/YuQing" />
+    <SUITE FILE_PATH="coverage/YuQing$main__1_.coverage" NAME="main (1) Coverage Results" MODIFIED="1572330451111" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/YuQing" />
+    <SUITE FILE_PATH="coverage/YuQing$test__1_.coverage" NAME="test (1) Coverage Results" MODIFIED="1572336267676" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/YuQing/utils" />
+    <SUITE FILE_PATH="coverage/YuQing$add_test_data.coverage" NAME="add_test_data Coverage Results" MODIFIED="1572341780558" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/YuQing/test" />
   </component>
 </project>

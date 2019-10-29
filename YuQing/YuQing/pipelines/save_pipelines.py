@@ -30,7 +30,7 @@ class YuqingPipeline(object):
             collection_name = crawler.settings.get('COLLECTION_NEWS', 'news'),
             time_interval = crawler.settings.get("SAVE_TIME_INTERVAL", 60),
             item_capacity = crawler.settings.get("SAVE_ITEM_CAPACITY", 100),
-            stats = crawler.stats
+            stats=crawler.stats
         )
 
     def open_spider(self, spider):
@@ -44,7 +44,7 @@ class YuqingPipeline(object):
         self.client.close()
         print("最终插入{}条".format(self.insert_num))
         self.stats.set_value("finaly_insert_item",self.insert_num )
-        logger.info("最终插入{}条".format(self.insert_num))
+        spider.logger.info("最终插入{}条".format(self.insert_num))
 
     def process_item(self, item, spider):
         if isinstance(item,NewsItem):

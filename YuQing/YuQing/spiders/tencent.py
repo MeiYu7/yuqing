@@ -97,7 +97,7 @@ class TencentSpider(scrapy.Spider):
         item_loader.add_value("news_comments_num", comment_num)
         item = item_loader.load_item()
 
-        yield scrapy.Request(self.comment_list_temp.format(response.meta["cmt_id"],0),
+        yield scrapy.Request(self.comment_list_temp.format(response.meta["cmt_id"], 0),
                              callback=self.parse_comment,
                              meta={"item": item, "cmt_id": response.meta["cmt_id"]})
 
@@ -108,6 +108,7 @@ class TencentSpider(scrapy.Spider):
         data = json.loads(response.body.decode(response.encoding))
         last_page = data.get("data").get("last")
         data = data.get("data")
+        # todo 评论有一点问题，评论的添加
         comment_list = []
         for comment in data.get("oriCommList"):
             cmt_item_loader = NewsItemLoader(item=CommentsItem(), response=response)
@@ -119,10 +120,17 @@ class TencentSpider(scrapy.Spider):
             cmt_item_loader.add_value("against_count", "")
             cmt_item_loader.add_value("reviewers_id", comment["userid"])
             cmt_item_loader.add_value("reviewers_nickname", data["userList"][comment["userid"]]["nick"])
-            cmt_item_loader.add_value("reviewers_addr", data["userList"][comment["userid"]]["region"].replace(":"," "))
+            cmt_item_loader.add_value("reviewers_addr", data["userList"][comment["userid"]]["region"])
             cmt_item = cmt_item_loader.load_item()
             comment_list.append(cmt_item)
 
         item_loader.add_value("news_comments", comment_list)
         item = item_loader.load_item()
-        print("=====>",item)
+        print("=====>", item)
+
+        if last_page != "":
+            next_url = self.comment_list_temp.format(response.meta["cmt_id"], last_page)
+            print("下一页评论", next_url)
+
+            yield scrapy.Request(next_url, callback=self.parse_comment,
+                                 meta={"item": item, "cmt_id": response.meta["cmt_id"]})
