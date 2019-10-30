@@ -18,12 +18,12 @@ class AddTestData(object):
         self._client = pymongo.MongoClient("mongodb://localhost:27017")
         self._db = self._client["test"]
         self.col = self._db["news"]
-
-    def add_data(self, n=20):
-        """添加计划"""
+        self.n = 1000000
         self.j = 0
-        self.n = n
-        for i in range(n):
+
+    def add_data(self):
+        """添加计划"""
+        for i in range(self.n):
             data = {
                 "news_url": self.f.url(),
                 "news_content": self.f.text(),
@@ -36,7 +36,7 @@ class AddTestData(object):
                 "news_title": self.f.sentence(),
                 "comments": []
             }
-            for u in range(self.f.random_int()):
+            for u in range(self.f.random_int(max=100)):
                 comment_item = {
                     "content": self.f.sentence(),
                     "comment_id": self.f.random_number(digits=8),
@@ -47,37 +47,37 @@ class AddTestData(object):
                 self.j += 1
                 self.data_list.append(data)
 
-                print("已有{}data".format(len(self.data_list)))
-
     def insert_data(self):
         while 1:
             self.time_end = datetime.now()
-            if (self.time_end - self.time_start).seconds >= 100:
+            if (self.time_end - self.time_start).seconds >= 30:
                 self.time_start = self.time_end
                 self.insert_mongo()
 
             if self.j == self.n:
                 self.insert_mongo()
                 break
-            time.sleep(5)
-            print("sleep 5s")
+            time.sleep(10)
+            print("sleep 10s")
+            print("已有{}data".format(len(self.data_list)))
 
     def insert_mongo(self):
         if len(self.data_list) > 0:
             ret = self.col.insert_many(self.data_list, ordered=False)
             self.data_list = []
             insert_ids_num = len(ret.inserted_ids)
-            print("{}时间 插入{}条".format(self.time_end, insert_ids_num))
+            print("=========>{}时间 插入{}条<==========".format(self.time_end, insert_ids_num))
 
     def run(self):
         # 多线程
-        t1 = threading.Thread(target=self.add_data, args=(1000000,))
         t2 = threading.Thread(target=self.insert_data)
-        for t in [t1, t2]:
-            t.start()
+        t2.start()
 
-        for t in [t1, t2]:
-            t.join()
+        for i in range(40):
+            t1 = threading.Thread(target=self.add_data)
+            t1.start()
+
+        t2.join()
 
         print("all done")
 
