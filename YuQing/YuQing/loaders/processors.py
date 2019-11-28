@@ -7,7 +7,7 @@ def str_replace(values):
         values = values[0]
         values = re.sub(r"\s", " ", values)
     value = re.sub(
-        r'[:0-9a-zA-Z_（）\(\)]+|来源:|责任编辑：|原标题：|\u3000|\u200b|\u200b|\xa0|返回搜狐，查看更多|扫一扫，用手机看新闻！|用微信扫描还可以|分享至好友和朋友圈|相关视频：|\[|\]|[\n\t\r]+ ',
+        r'[:a-zA-Z_（）\(\)]+|来源:|责任编辑：|原标题：|\u3000|\u200b|\u200b|\xa0|返回搜狐，查看更多|扫一扫，用手机看新闻！|用微信扫描还可以|分享至好友和朋友圈|相关视频：|\[|\]|[\n\t\r]+ ',
         "", values).strip()
     return value
 
@@ -60,5 +60,14 @@ def deal_time(values):
             values = re.sub(r"\s", " ", values)
             value = re.sub(r'来源|[\[\]\n\t\r]+|\u3000|\u200b|\u200b|：', "", values).strip()
             value = FormatTime().format_str_time(value)
-
     return value
+
+
+def str_to_int(values):
+    if isinstance(values, str):
+        try:
+            values = int(values)
+        except Exception as e:
+            print(e)
+            values = values
+    return values

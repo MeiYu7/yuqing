@@ -27,13 +27,13 @@ CONCURRENT_REQUESTS = 1
 # Configure a delay for requests for the same website (default: 0)
 # See https://doc.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 1
+# DOWNLOAD_DELAY = 1
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
 
 # Disable cookies (enabled by default)
-COOKIES_ENABLED = False
+# COOKIES_ENABLED = False
 
 # Disable Telnet Console (enabled by default)
 #TELNETCONSOLE_ENABLED = False
@@ -53,8 +53,9 @@ COOKIES_ENABLED = False
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
-    'YuQing.middlewares.YuqingDownloaderMiddleware': None,
+    'YuQing.middlewares.YuqingDownloaderMiddleware': 0,
     'YuQing.middlewares.ProcessAllExceptionMiddleware': 100,
+    'YuQing.middlewares.MoGuProxyMiddleWare': 100,
     'YuQing.middlewares.AntispiderRequestMiddlewere': 100,
     'YuQing.middlewares.JdDownloadmiddlewareRandomUseragent': 200,
     'YuQing.middlewares.SeleniumMiddleware': 300,
@@ -68,6 +69,7 @@ EXTENSIONS = {
     'YuQing.extensions.settings.LoaderCustomSettings': 0,
     'YuQing.extensions.db.MonGoDB': 100,
     'YuQing.extensions.corestats.CoreStats': 110,
+    'YuQing.extensions.selenium_browser.SeleniumBrowser': 110,
     'YuQing.extensions.requst.BeforeFilterRequest': 0,
     'YuQing.extensions.exception.SpiderExceptionExtension': 140,
     'YuQing.extensions.exception.FieldErrorExtension': 160,
@@ -88,3 +90,6 @@ CUSTOM_SETTINGS = 'YuQing.settings.custom'
 
 # 自定义过滤条件
 DONT_FILTER_REQUEST = True
+
+# # 禁止重定向
+# REDIRECT_ENABLED = False

@@ -4,7 +4,7 @@
 #
 # See documentation in:
 # https://doc.scrapy.org/en/latest/topics/spider-middleware.html
-
+import random
 import time
 import traceback
 import datetime
@@ -21,7 +21,8 @@ from twisted.web.client import ResponseFailed
 from scrapy.core.downloader.handlers.http11 import TunnelError
 # from scrapy.conf import settings
 from YuQing.items import ErrorItem,StatsItem
-# from scrapy.log import logger
+import logging
+from selenium import webdriver
 
 
 class YuqingSpiderMiddleware(object):
@@ -103,6 +104,11 @@ class YuqingDownloaderMiddleware(object):
         # - return a Response object
         # - return a Request object
         # - or raise IgnoreRequest
+
+        # a = random.randint(1, 8)
+        # logging.info("暂停{}秒".format(a))
+        # time.sleep(a)
+
         return response
 
     def process_exception(self, request, exception, spider):
@@ -123,7 +129,7 @@ class YuqingDownloaderMiddleware(object):
 class JdDownloadmiddlewareRandomUseragent(object):
     def __init__(self):
         # self.ua = UserAgent()
-        self.f = Faker(locale='zh-CN')
+        self.f = Faker(locale='zh_CN')
     def process_request(self,request,spider):
         # useragent = self.ua.random
         useragent = self.f.user_agent()
@@ -135,7 +141,6 @@ class JdDownloadmiddlewareRandomUseragent(object):
 class SeleniumMiddleware(object):
     def process_request(self, request, spider):
         """处理一切请求的方法"""
-
         # 这个if条件很重要，用来区分哪个请求使用selenium
         if request.meta.get("middleware") == "SeleniumMiddleware":
             try:
@@ -194,6 +199,8 @@ class StatCollectorMiddleware(object):
     def __init__(self, settings):
         self.mongo_db = settings.get('DB_MONGO')
         self.stat = self.mongo_db[settings.get('STATS_COLLECTION', StatsItem.collection)]
+        self.browser = settings.get('seleniumBrowser')
+
 
     @classmethod
     def from_crawler(cls, crawler):
@@ -204,6 +211,7 @@ class StatCollectorMiddleware(object):
     def spider_closed(self, spider):
         item = self.fill_item(spider)
         self.save_db(item)
+        self.browser.close()
 
     def fill_item(self, spider):
         stats = spider.crawler.stats.get_stats()
@@ -228,8 +236,13 @@ class StatCollectorMiddleware(object):
 # 处理sogou验证码
 class AntispiderRequestMiddlewere(object):
 
-    # def __init__(self):
-    #     self.ua = UserAgent()
+    def __init__(self, settings):
+        self.browser = settings.get('seleniumBrowser')
+
+    @classmethod
+    def from_settings(cls, settings):
+        o = cls(settings)
+        return o
 
     def process_request(self,request,spider):
 
@@ -237,3 +250,36 @@ class AntispiderRequestMiddlewere(object):
 
            print("Sogou正在进行验证码验证")
 
+           self.browser.get(request.url)
+           # 休息30秒 手动输入验证码
+           time.sleep(60)
+           # 返回加载后的页面response
+           return HtmlResponse(url=request.url, body=self.browser.page_source,
+                               encoding="utf-8", request=request)
+
+
+# 代理服务器
+proxyServer = "http://secondtransfer.moguproxy.com:9001"
+proxy = {"http": "http://" + proxyServer, "https": "https://" + proxyServer}
+
+# appkey为你订单的key
+proxyAuth = "Basic " + "VU9WOUh1ZXM2bzBVbWVPcTpjQ3EybHplNnI3TXJLT21E"    # 这一长串是你的Key
+
+
+class MoGuProxyMiddleWare(object):
+    """蘑菇代理中间件"""
+
+    def process_request(self, request, spider):
+        request.meta["proxy"] = proxyServer
+        request.headers["Authorization"] = proxyAuth
+
+    def process_response(self, request, response, spider):
+        '''对返回的response处理'''
+        # 如果返回的response状态不是200，重新生成当前request对象
+
+        if response.status != 200:
+            request.meta["proxy"] = proxyServer
+            request.headers["Authorization"] = proxyAuth
+            return request
+
+        return response

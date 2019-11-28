@@ -1,11 +1,13 @@
 
-NEWS_FILE = 'C:/Users\myq91\Desktop\MYQSpiders\YuQing\YuQing//utils/news_xpath2.csv'
+NEWS_FILE = './utils/news_xpath2.csv'
 
 ALLOWED_DOMAINS = ['sogou.com','qq.com','sohu.com','sina.com.cn','ifeng.com','163.com','people.com.cn']
 
+CHECK_FIELDS = ['news_time', 'news_content', 'news_title']
+
 TEST_KEYWORD = '杭州'
 
-FILTER_TIME = 2018
+FILTER_TIME = "2018-1-1"
 
 # scrapy-redis 配置
 SCHEDULER = "YuQing.lib.scrapy_redis_bloomfilter.scheduler.Scheduler"  # BoolFilter调度器
@@ -26,7 +28,7 @@ DB_PLAN = 'plans'
 STATS_COLLECTION = 'scrapy_stats'
 
 
-DOWNLOAD_TIMEOUT = 30  # 请求时间达到多少秒重试
+DOWNLOAD_TIMEOUT = 60  # 请求时间达到多少秒重试
 RETRY_ENABLED = True  # 开启重试
 RETRY_TIMES = 3  # 重试3次
 

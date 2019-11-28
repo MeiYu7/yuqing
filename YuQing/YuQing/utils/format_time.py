@@ -85,12 +85,15 @@ class FormatTime(object):
         if day < 10:
             day = '0' + str(day)
 
-        if len(time) > 0:
+        if len(time) > 0 :
             time_new = ":".join(time[0])
             time_new = '%s-%s-%s' % (year, month, day) + " " + time_new
-            return time_new
+            if len(time[0]) > 2:
+                return datetime.datetime.strptime(time_new, "%Y-%m-%d %H:%M:%S")
+            if len(time[0]) == 2:
+                return datetime.datetime.strptime(time_new, "%Y-%m-%d %H:%M")
 
-        return '%s-%s-%s' % (year, month, day)
+        return datetime.datetime.strptime('%s-%s-%s' % (year, month, day), "%Y-%m-%d")
 
     def format_time_stamp(self, time_stamp):
         return datetime.datetime.fromtimestamp(time_stamp).strftime('%Y-%m-%d %H:%M:%S')

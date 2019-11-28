@@ -18,7 +18,7 @@ class MongoDBPipeline(object):
     def process_item(self, item, spider):
         if isinstance(item, NewsItem):
             self.save_db(item)
-            print("save one   ")
+            print("save one>>>")
 
     def save_db(self, item):
         self.mongo_db[self.collection].update_one({'news_url': item['news_url']}, {'$set': item}, upsert=True)

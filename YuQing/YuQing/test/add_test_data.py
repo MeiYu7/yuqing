@@ -23,7 +23,7 @@ class AddTestData(object):
         self.collection = "news_{}"
         self.col = self._db[self.collection.format(self.collection_num)]
         self.n = 1000000
-        self.mongo_max = 500000
+        self.mongo_max = 1000000
         self.j = 0
         self.plan_list = ["方案{}".format(i) for i in range(100)]
         self.source_list = ["搜狐网", "腾讯网", "人民网", "凤凰网", "新浪网", "网易新闻"]
@@ -42,7 +42,7 @@ class AddTestData(object):
                 "news_time": self.f.date_time_this_century(before_now=True, after_now=False, tzinfo=None),
                 "news_title": self.f.sentence(),
                 "comments": [],
-
+                "sensitive": random.choice([0, 1]),
                 "plans": random.choice(self.plan_list)
             }
             for u in range(self.f.random_int(max=100)):
