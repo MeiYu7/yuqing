@@ -102,16 +102,21 @@ class PeopleSpider(scrapy.Spider):
         # news_id 在跳转的评论页获取
         news_id = response.request.url.split("/")[-1].split(".")[0]
         self.news_comments_dict[news_id] = []
+        news_comments_num = re.findall(r'class="replayNum">(\d+)</span>', response.body.decode(response.encoding))
+        if len(news_comments_num)>0:
+            news_comments_num = news_comments_num[0]
+        else:
+            news_comments_num = 0
 
         item = response.meta["item"]
-        item_loader = NewsItemLoader(item=item)
+        item_loader = NewsItemLoader(item=item, response=response)
         item_loader.add_value("news_id", news_id)
         item_loader.add_xpath("news_read_num", "//span[@class='readNum']/text()")
-        item_loader.add_xpath("news_comments_num", "//span[@class='replayNum']/text()")
         item_loader.add_xpath("news_comments_total_page_no", "//div[@class='pageBar']/@pagecount")
+        item_loader.add_value("news_comments_num", news_comments_num)
         item = item_loader.load_item()
 
-        if item["news_comments_num"] == 0:
+        if item["news_comments_num"] == "0" or item["news_comments_num"] == 0:
             print("parse_comment_num  保存！ 保存！ 保存！")
             item["news_comments"] = self.news_comments_dict[news_id]
             item["create_time"] = datetime.now()
@@ -119,6 +124,7 @@ class PeopleSpider(scrapy.Spider):
             # print(item)
             yield item
         else:
+            print(item)
             yield scrapy.Request(self.comment_url_temp.format(news_id=news_id, page="1"), callback=self.parse_comment,
                                  meta={"item": item}, dont_filter=True)
 
@@ -153,6 +159,8 @@ class PeopleSpider(scrapy.Spider):
                 comment_dict = self.parse_one_comment(comment_loader)
                 # 列表的添加
                 self.news_comments_dict[news_id].append(comment_dict)
+
+        print("{}新闻，{}条评论，获取了{}条".format(news_id, comment_total_num, len(self.news_comments_dict[news_id])))
 
         # 获取下一页
         next_page_no = now_page_no + 1
