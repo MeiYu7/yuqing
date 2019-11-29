@@ -48,7 +48,7 @@ class NeteasySpider(scrapy.Spider):
         for plan in plans:
             # print(plan)
             # query_word = plan["areas"] + plan["events"] + plan["persons"]
-            query_word = "杀人"
+            query_word = "猝死"
             plan_name = plan["plan_name"]
             print(query_word)
             url = self.sogou_url_temp.format(self.start_uri, query_word, "1")
@@ -153,7 +153,7 @@ class NeteasySpider(scrapy.Spider):
         comment_total_num = item["news_comments_num"]
         print("comment_total_num", type(comment_total_num))
         # 获取全部页码数量
-        total_page_no = item["news_comments_total_page_no"]
+        # total_page_no = item["news_comments_total_page_no"]
 
         # 获取当前评论页码
         now_page_no = re.findall(r"offset=(\d+?)", response.request.url)
@@ -163,6 +163,8 @@ class NeteasySpider(scrapy.Spider):
             now_page_no = 0
 
         data = json.loads(response.body.decode(response.encoding))
+        total_page_no = data["newListSize"]
+        item["news_comments_total_page_no"] = total_page_no
 
         for comment_ids in data["commentIds"]:
             for comment_id in comment_ids.split(","):
@@ -170,6 +172,8 @@ class NeteasySpider(scrapy.Spider):
                 comment_loader.add_value("parent_id", self.parse_parent_id_order(comment_ids, comment_id))
                 comment_dict = self.parse_one_comment(comment_loader, data["comments"][comment_id])
                 self.news_comments_dict[news_id].append(comment_dict)
+
+        print("{}新闻，{}条评论，获取了{}条".format(news_id, comment_total_num, len(self.news_comments_dict[news_id])))
 
         # 获取下一页
         next_page_no = now_page_no + 1
