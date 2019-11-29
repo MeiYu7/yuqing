@@ -47,9 +47,9 @@ class SohuSpider(scrapy.Spider):
     def start_requests(self):
         plans = self.mongo_db[self.col].find()
         for plan in plans:
-            # print(plan)
-            # query_word = plan["areas"] + plan["events"] + plan["persons"]
-            query_word = "杀人"
+            print(plan)
+            query_word = plan["areas"] + plan["events"] + plan["persons"]
+            # query_word = "杀人"
             plan_name = plan["plan_name"]
             print(query_word)
             url = self.sogou_url_temp.format(self.start_uri, query_word, "1")
@@ -117,7 +117,7 @@ class SohuSpider(scrapy.Spider):
         print(comment_total_num)
 
         item_loader = NewsItemLoader(item=item)
-        item_loader.add_value("news_comments_num", int(data["jsonObject"]["cmt_sum"]))
+        item_loader.add_value("news_comments_num", comment_total_num)
         item_loader.add_value("news_comments_total_page_no", int(data["jsonObject"]["total_page_no"]))
         item = item_loader.load_item()
 
@@ -126,7 +126,7 @@ class SohuSpider(scrapy.Spider):
             print("parse_comment_num  保存！ 保存！ 保存！")
             item["news_comments"] = self.news_comments_dict[news_id]
             item["create_time"] = datetime.now()
-            item["news_comments"] = 1
+            item["crawler_number"] = 1
 
             # print(item)
             yield item
@@ -134,15 +134,16 @@ class SohuSpider(scrapy.Spider):
             yield scrapy.Request(response.request.url, callback=self.parse_comment, meta={"item": item},
                                  dont_filter=True)
 
-    def parse_one_comment(self, comment_loader, comment):
+    def parse_one_comment(self, comment_loader, comment, data=None):
         comment_loader.add_value("comment_id", comment["comment_id"])
-        comment_loader.add_value("content", comment["content"])
+        comment_loader.add_value("parent_id", "")
         comment_loader.add_value("comment_time", datetime.fromtimestamp(int(str(comment["create_time"])[:-3])))
+        comment_loader.add_value("content", comment["content"])
         comment_loader.add_value("support_count", comment["support_count"])
         comment_loader.add_value("against_count", "")
         comment_loader.add_value("reviewers_id", comment["user_id"])
-        comment_loader.add_value("reviewers_addr", comment["ip_location"])
         comment_loader.add_value("reviewers_nickname", comment["passport"]["nickname"])
+        comment_loader.add_value("reviewers_addr", comment["ip_location"])
         comment_dict = comment_loader.load_item()
 
         return comment_dict
@@ -179,14 +180,14 @@ class SohuSpider(scrapy.Spider):
         # 获取下一页
         next_page_no = now_page_no + 1
         if next_page_no <= total_page_no:
-            next_comment_url = self.comment_url_temp.format(page=str(now_page_no + 1), news_id=item["news_id"])
-            yield scrapy.Request(next_comment_url, callback=self.parse_comment,
-                                 meta={"item": item, "news_id": item["news_id"]})
-        # else:
+            next_comment_url = self.comment_url_temp.format(page=str(next_page_no), news_id=item["news_id"])
+            yield scrapy.Request(next_comment_url, callback=self.parse_comment, meta={"item": item})
+
+        # 保存
         if len(self.news_comments_dict[news_id]) >= comment_total_num:
             print("parse_comment   保存！ 保存！ 保存！")
             item["news_comments"] = self.news_comments_dict[news_id]
             item["create_time"] = datetime.now()
-            item["news_comments"] = 1
+            item["crawler_number"] = 1
 
             yield item

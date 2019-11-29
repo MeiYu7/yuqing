@@ -74,8 +74,7 @@ class TencentSpider(scrapy.Spider):
                                  meta={"plan_name": response.meta["plan_name"]})
 
     def parse_news(self, response):
-        news_id = response.request.url.split('/')[-1].split('.')[0]
-        self.news_comments_dict[news_id] = []
+        # news_id = response.request.url.split('/')[-1].split('.')[0]
 
         item_loader = NewsItemLoader(item=NewsItem(), response=response)
         item_loader.add_xpath("news_title", "//h1/text()")
@@ -98,58 +97,87 @@ class TencentSpider(scrapy.Spider):
         if len(comment_ids) > 0:
             for cmt_id in comment_ids[0]:
                 if cmt_id != "":
+                    item["news_id"] = cmt_id
+                    self.news_comments_dict[cmt_id] = []
                     num_url = self.comment_num_temp.format(cmt_id)
-                    yield scrapy.Request(num_url, callback=self.parse_comment_num, meta={"item": item, "cmt_id": cmt_id})
+                    yield scrapy.Request(num_url, callback=self.parse_comment_num, meta={"item": item})
 
         else:
             print("本篇新闻没有评论")
+            item["news_comments"] = self.news_comments_dict[item["news_id"]]
+            item["create_time"] = datetime.now()
+            item["crawler_number"] = 1
             yield item
 
     def parse_comment_num(self, response):
+        """获取评论的总数量"""
         data = json.loads(response.body.decode(response.encoding))
-        comment_num = int(data.get("data").get("commentnum"))
+        comment_total_num = int(data.get("data").get("commentnum"))
         item_loader = NewsItemLoader(item=response.meta["item"])
-        item_loader.add_value("news_comments_num", comment_num)
+        item_loader.add_value("news_comments_num", comment_total_num)
         item = item_loader.load_item()
 
-        yield scrapy.Request(self.comment_url_temp.format(response.meta["cmt_id"], 0),
-                             callback=self.parse_comment,
-                             meta={"item": item, "cmt_id": response.meta["cmt_id"], "news_comments_num": comment_num})
+        if comment_total_num == 0:
+            print("parse_comment_num  保存！ 保存！ 保存！")
+            item["news_comments"] = self.news_comments_dict[item["news_id"]]
+            item["create_time"] = datetime.now()
+            item["crawler_number"] = 1
+            yield item
+        else:
+            yield scrapy.Request(self.comment_url_temp.format(item["news_id"], 0),
+                                 callback=self.parse_comment,
+                                 meta={"item": item})
+
+    def parse_one_comment(self, comment_loader, comment, data=None):
+        comment_loader.add_value("comment_id", comment["id"])
+        comment_loader.add_value("parent_id", comment["parent"])
+        comment_loader.add_value("comment_time", FormatTime().format_time_stamp(int(comment["time"])))
+        comment_loader.add_value("content", comment["content"])
+        comment_loader.add_value("support_count", comment["up"])
+        comment_loader.add_value("against_count", "")
+        comment_loader.add_value("reviewers_id", comment["userid"])
+        comment_loader.add_value("reviewers_nickname", data["userList"][comment["userid"]]["nick"])
+        comment_loader.add_value("reviewers_addr", data["userList"][comment["userid"]]["region"])
+        comment_dict = comment_loader.load_item()
+        return comment_dict
 
     def parse_comment(self, response):
-        """解析评论"""
-        print(response.request.url)
+        """获取评论信息"""
         item = response.meta["item"]
-        item_loader = NewsItemLoader(item=item)
+        # 获取新闻id
+        news_id = item["news_id"]
+        # 获取总评论数量
+        comment_total_num = item["news_comments_num"]
+        print("comment_total_num", type(comment_total_num))
+        # 获取全部页码数量
+        # total_page_no = item["news_comments_total_page_no"]
+
         data = json.loads(response.body.decode(response.encoding))
-        last_page = data.get("data").get("last")
         data = data.get("data")
-        comment_num = int(data["targetInfo"]["commentnum"])
+
+        # 获取当前评论页码
+        now_page_no = data.get("last")
+
         # todo 评论有一点问题，评论的添加
-        for comment in data.get("oriCommList"):
-            cmt_item_loader = NewsItemLoader(item=CommentsItem(), response=response)
-            cmt_item_loader.add_value("comment_id", comment["id"])
-            cmt_item_loader.add_value("parent_id", comment["parent"])
-            cmt_item_loader.add_value("comment_time", FormatTime().format_time_stamp(int(comment["time"])))
-            cmt_item_loader.add_value("content", comment["content"])
-            cmt_item_loader.add_value("support_count", comment["up"])
-            cmt_item_loader.add_value("against_count", "")
-            cmt_item_loader.add_value("reviewers_id", comment["userid"])
-            cmt_item_loader.add_value("reviewers_nickname", data["userList"][comment["userid"]]["nick"])
-            cmt_item_loader.add_value("reviewers_addr", data["userList"][comment["userid"]]["region"])
-            cmt_item = cmt_item_loader.load_item()
-            self.news_comments_list.append(cmt_item)
+        # 获取评论内容
+        if len(data.get("oriCommList")) > 0:
+            for comment in data.get("oriCommList"):
+                comment_loader = NewsItemLoader(item=CommentsItem(), response=response)
+                comment_dict = self.parse_one_comment(comment_loader, comment, data)
+                # todo 列表的添加
+                self.news_comments_dict[news_id].append(comment_dict)
+        print("{}新闻，{}条评论，获取了{}条".format(news_id, comment_total_num, len(self.news_comments_dict[news_id])))
 
-        if last_page != "":
-            next_url = self.comment_url_temp.format(response.meta["cmt_id"], last_page)
-            yield scrapy.Request(next_url, callback=self.parse_comment,
-                                 meta={"item": item, "cmt_id": response.meta["cmt_id"], "news_comments_num": response.meta["news_comments_num"]})
+        # 获取下一页
+        if now_page_no != "":
+            next_comment_url = self.comment_url_temp.format(item["news_id"], now_page_no)
+            yield scrapy.Request(next_comment_url, callback=self.parse_comment, meta={"item": item})
 
-        print(comment_num)
-        if len(self.news_comments_list) == comment_num:
-            item_loader.add_value("news_comments", self.news_comments_list)
-            item_loader.add_value("create_time", datetime.now())
-            item_loader.add_value("crawler_number", 1)
-            item = item_loader.load_item()
-            # print(item)
+        # 保存
+        if len(self.news_comments_dict[news_id]) >= comment_total_num:
+            print("parse_comment   保存！ 保存！ 保存！")
+            item["news_comments"] = self.news_comments_dict[news_id]
+            item["create_time"] = datetime.now()
+            item["crawler_number"] = 1
+
             yield item

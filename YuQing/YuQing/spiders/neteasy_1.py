@@ -18,8 +18,6 @@ class Neteasy1Spider(scrapy.Spider):
 
     def __init__(self):
         self.news_comments_dict = dict()
-        self.comment_id_list = list()
-        self.times = 0
 
     def spider_opened(self):
         print("爬虫开始咯....")
@@ -48,38 +46,6 @@ class Neteasy1Spider(scrapy.Spider):
         # url = self.sogou_url_temp.format(self.start_uri, query_word, "1")
         # print(url)
         # yield scrapy.Request(url, callback=self.parse, dont_filter=True, meta={"query_word": query_word})
-
-    # def parse(self, response):
-    #     item_loader = NewsItemLoader(item=NewsItem(), response=response)
-    #
-    #     item_loader.add_value("try_name", {"name": "333"})
-    #     item_loader.add_value("try_name", {"name": "2222"})
-    #     item_loader.add_value("try_name", {"name": "1111"})
-    #     # print(item_loader)
-    #     item = item_loader.load_item()
-    #     print("1--->",item)
-    #     # print(item)
-    #     print("**********************")
-    #
-    #     yield scrapy.Request("https://www.baidu.com/", callback=self.parse_2, dont_filter=True, meta={"item": item})
-    #
-    # def parse_2(self, response):
-    #     item = response.meta["item"]
-    #     print(item)
-    #     item_loader = NewsItemLoader(item=item)
-    #
-    #     print("***************************")
-    #     item_loader.add_value("try_name", item["try_name"])
-    #     item_loader.add_value("try_name", {"name": "444"})
-    #     item_loader.add_value("try_name", {"name": "555"})
-    #     item_loader.add_value("try_name", {"name": "666"})
-    #
-    #     item = item_loader.load_item()
-    #     print("2--->",item)
-
-    # def start_requests(self):
-    #
-    #     yield scrapy.Request("https://www.baidu.com/", callback=self.parse, dont_filter=True)
 
     def parse(self, response):
         print("parse==>", response.request.url)

@@ -53,13 +53,14 @@ CONCURRENT_REQUESTS = 1
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
-    'YuQing.middlewares.YuqingDownloaderMiddleware': 0,
-    'YuQing.middlewares.ProcessAllExceptionMiddleware': 100,
-    'YuQing.middlewares.MoGuProxyMiddleWare': 100,
-    'YuQing.middlewares.AntispiderRequestMiddlewere': 100,
-    'YuQing.middlewares.JdDownloadmiddlewareRandomUseragent': 200,
-    'YuQing.middlewares.SeleniumMiddleware': 300,
-    'YuQing.middlewares.StatCollectorMiddleware': 400
+    # 'YuQing.middlewares.YuqingDownloaderMiddleware.YuqingDownloaderMiddleware': 0,
+    'YuQing.middlewares.RandomCookieMiddleware.RandomCookieMiddleware': 50,
+    'YuQing.middlewares.ProcessAllExceptionMiddleware.ProcessAllExceptionMiddleware': 100,
+    'YuQing.middlewares.MoGuProxyMiddleware.MoGuProxyMiddleware': 100,
+    'YuQing.middlewares.AntispiderRequestMiddleware.AntispiderRequestMiddleware': 100,
+    'YuQing.middlewares.RandomUseragentMiddleware.RandomUseragentMiddleware': 200,
+    # 'YuQing.middlewares.SeleniumMiddleware.SeleniumMiddleware': 300,
+    'YuQing.middlewares.StatCollectorMiddleware.StatCollectorMiddleware': 400
 }
 
 # Enable or disable extensions
@@ -69,7 +70,7 @@ EXTENSIONS = {
     'YuQing.extensions.settings.LoaderCustomSettings': 0,
     'YuQing.extensions.db.MonGoDB': 100,
     'YuQing.extensions.corestats.CoreStats': 110,
-    'YuQing.extensions.selenium_browser.SeleniumBrowser': 110,
+    # 'YuQing.extensions.selenium_browser.SeleniumBrowser': 110,
     'YuQing.extensions.requst.BeforeFilterRequest': 0,
     'YuQing.extensions.exception.SpiderExceptionExtension': 140,
     'YuQing.extensions.exception.FieldErrorExtension': 160,
