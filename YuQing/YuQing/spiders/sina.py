@@ -49,8 +49,8 @@ class SinaSpider(scrapy.Spider):
         plans = self.mongo_db[self.col].find()
         for plan in plans:
             # print(plan)
-            # query_word = plan["areas"] + plan["events"] + plan["persons"]
-            query_word = "杀人"
+            query_word = plan["areas"] + plan["events"] + plan["persons"]
+            # query_word = "杀人"
             plan_name = plan["plan_name"]
             print(query_word)
             url = self.sogou_url_temp.format(self.start_uri, query_word, "1")
@@ -77,8 +77,8 @@ class SinaSpider(scrapy.Spider):
 
     def parse_news(self, response):
         """解析新浪新闻"""
-        news_id = re.findall(r"newsid: '(.*?)',", response.body.decode(response.encoding))[0]
-        channel = re.findall(r"channel: '(.*?)',", response.body.decode(response.encoding))[0]
+        news_id = re.findall(r"""newsid[: '"=]+(.*?)[ '"]+,""", response.body.decode(response.encoding))[-1]
+        channel = re.findall(r"""channel[: '"=]+(.*?)[ '"]+""", response.body.decode(response.encoding))[-1]
         self.news_comments_dict[news_id] = []
 
         item_loader = NewsItemLoader(item=NewsItem(), response=response)

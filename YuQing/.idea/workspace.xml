@@ -1,28 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b66c107d-387f-46d3-a143-6b5245182310" name="Default" comment="增加大量文件，做到tencent的评论">
-      <change afterPath="$PROJECT_DIR$/YuQing/middlewares/AntispiderRequestMiddleware.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/YuQing/middlewares/MoGuProxyMiddleware.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/YuQing/middlewares/ProcessAllExceptionMiddleware.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/YuQing/middlewares/RandomCookieMiddleware.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/YuQing/middlewares/RandomUseragentMiddleware.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/YuQing/middlewares/SeleniumMiddleware.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/YuQing/middlewares/StatCollectorMiddleware.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/YuQing/middlewares/__init__.py" afterDir="false" />
+    <list default="true" id="b66c107d-387f-46d3-a143-6b5245182310" name="Default" comment="爬虫代码统一化，修改中间件的位置，新增cookie池中间件">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/YuQing/111.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/YuQing/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/YuQing/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/YuQing/middlewares.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/YuQing/settings/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/YuQing/settings/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/YuQing/spiders/ifeng.py" beforeDir="false" afterPath="$PROJECT_DIR$/YuQing/spiders/ifeng.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/YuQing/spiders/neteasy.py" beforeDir="false" afterPath="$PROJECT_DIR$/YuQing/spiders/neteasy.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/YuQing/spiders/neteasy_1.py" beforeDir="false" afterPath="$PROJECT_DIR$/YuQing/spiders/neteasy_1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/YuQing/spiders/people.py" beforeDir="false" afterPath="$PROJECT_DIR$/YuQing/spiders/people.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/YuQing/spiders/sina.py" beforeDir="false" afterPath="$PROJECT_DIR$/YuQing/spiders/sina.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/YuQing/spiders/sogou.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/YuQing/spiders/sohu.py" beforeDir="false" afterPath="$PROJECT_DIR$/YuQing/spiders/sohu.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/YuQing/spiders/tencent.py" beforeDir="false" afterPath="$PROJECT_DIR$/YuQing/spiders/tencent.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -302,6 +285,7 @@
       <workItem from="1574666074459" duration="37512000" />
       <workItem from="1574816697629" duration="44816000" />
       <workItem from="1574923908413" duration="37775000" />
+      <workItem from="1575022476587" duration="3924000" />
     </task>
     <task id="LOCAL-00001" summary="删除settings文件里的多余内容">
       <created>1571909625270</created>
@@ -366,7 +350,14 @@
       <option name="project" value="LOCAL" />
       <updated>1574942707833</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="爬虫代码统一化，修改中间件的位置，新增cookie池中间件">
+      <created>1575022538358</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1575022538358</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -399,23 +390,13 @@
     <MESSAGE value="添加test模块，优化添加测试数据脚本" />
     <MESSAGE value="优化测试数据脚本" />
     <MESSAGE value="增加大量文件，做到tencent的评论" />
-    <option name="LAST_COMMIT_MESSAGE" value="增加大量文件，做到tencent的评论" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/YuQing/middlewares/AntispiderRequestMiddleware.py</url>
-          <line>8</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="爬虫代码统一化，修改中间件的位置，新增cookie池中间件" />
+    <option name="LAST_COMMIT_MESSAGE" value="爬虫代码统一化，修改中间件的位置，新增cookie池中间件" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/YuQing$add_yuqing_plans.coverage" NAME="add_yuqing_plans Coverage Results" MODIFIED="1572072052268" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/YuQing/utils" />
     <SUITE FILE_PATH="coverage/YuQing$main.coverage" NAME="main Coverage Results" MODIFIED="1572328302274" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/YuQing" />
-    <SUITE FILE_PATH="coverage/YuQing$main__1_.coverage" NAME="main (1) Coverage Results" MODIFIED="1575015492412" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/YuQing" />
+    <SUITE FILE_PATH="coverage/YuQing$main__1_.coverage" NAME="main (1) Coverage Results" MODIFIED="1575027655494" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/YuQing" />
     <SUITE FILE_PATH="coverage/YuQing$format_time.coverage" NAME="format_time Coverage Results" MODIFIED="1574676761284" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/YuQing/utils" />
     <SUITE FILE_PATH="coverage/YuQing$test__1_.coverage" NAME="test (1) Coverage Results" MODIFIED="1572336267676" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/YuQing/utils" />
     <SUITE FILE_PATH="coverage/YuQing$add_test_data.coverage" NAME="add_test_data Coverage Results" MODIFIED="1573438584596" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/YuQing/test" />
