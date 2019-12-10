@@ -32,6 +32,7 @@ class NewsItem(Item):
     newsComments = Field(out_processor=Identity())  # 新闻评论内容
     newsCommentsTotalPageNo = Field()  # 新增
     planName = Field()
+    planDetails = Field()
 
     crawlerNumber = Field()  # 爬虫次数，最多3次
     createTime = Field()  # 爬虫更新时间，最多3条

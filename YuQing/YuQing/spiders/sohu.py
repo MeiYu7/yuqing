@@ -8,6 +8,7 @@ from scrapy import signals
 
 from YuQing.items import NewsItem, CommentsItem
 from YuQing.loaders.loader import NewsItemLoader, NewsCommentsItemLoader
+from YuQing.utils.parse_plan import ParsePlan
 
 
 class SohuSpider(scrapy.Spider):
@@ -49,13 +50,16 @@ class SohuSpider(scrapy.Spider):
         for plan in plans:
             print(plan)
             # query_word = plan["areas"] + plan["events"] + plan["persons"]
-            query_word = "杀人"
-            plan_name = plan["planName"]
-            print(query_word)
-            url = self.sogou_url_temp.format(self.start_uri, query_word, "1")
-            print(url)
-            yield scrapy.Request(url, callback=self.parse, dont_filter=True,
-                                 meta={"query_word": query_word, "planName": plan_name})
+            query_word_list = ParsePlan(plan).run()
+
+            # query_word = "杀人"
+            for query_word in query_word_list:
+                plan_name = plan["planName"]
+                print(query_word)
+                url = self.sogou_url_temp.format(self.start_uri, query_word, "1")
+                print(url)
+                yield scrapy.Request(url, callback=self.parse, dont_filter=True,
+                                     meta={"query_word": query_word, "plan": plan})
 
     def parse(self, response):
         news_list = response.xpath("//div[@class='results']/div//h3/a")
@@ -63,7 +67,7 @@ class SohuSpider(scrapy.Spider):
         for a in news_list:
             a_href = a.xpath("./@href").extract_first()
             yield scrapy.Request(a_href, callback=self.parse_news, dont_filter=True,
-                                 meta={"planName": response.meta["planName"]})
+                                 meta={"plan": response.meta["plan"]})
 
         # 获取下一页新闻
         next_url = response.xpath("//a[@class='np']/@href").extract_first()
@@ -72,7 +76,7 @@ class SohuSpider(scrapy.Spider):
             next_url = response.urljoin(next_url)
             print('=====>', next_url)
             yield scrapy.Request(next_url, callback=self.parse, dont_filter=True,
-                                 meta={"planName": response.meta["planName"]})
+                                 meta={"plan": response.meta["plan"]})
 
     def parse_news(self, response):
         news_id = response.request.url.split('/')[-1].split('_')[0]
@@ -92,9 +96,10 @@ class SohuSpider(scrapy.Spider):
         item_loader.add_xpath("newsEditor", "//article/p[contains(text(),'责任编辑') or contains(text(),'责编')]/text()")
         item_loader.add_xpath("newsKeyword", "//a[@class='tag']/text()")
         # item_loader.add_value("newsComments", [])
-        item_loader.add_value("planName", response.meta["planName"])
+        item_loader.add_value("planName", response.meta["plan"]["planName"])
+        item_loader.add_value("plan_details", response.meta["plan"])
         item = item_loader.load_item()
-
+        # print(item)
         yield scrapy.Request(self.souhu_read_url.format(news_id), callback=self.parse_read_num, meta={"item": item})
 
     def parse_read_num(self, response):
