@@ -27,16 +27,16 @@ class StatCollectorMiddleware(object):
     def fill_item(self, spider):
         stats = spider.crawler.stats.get_stats()
         item = StatsItem()
-        item['start_time'] = stats.get("start_time")
-        item['finish_time'] = stats.get("finish_time")
-        item['finish_reason'] = stats.get("finish_reason")
-        item['item_scraped_count'] = stats.get("item_scraped_count")
-        item['item_dropped_count'] = stats.get("item_dropped_count")
-        # item['item_dropped_reasons_count'] = stats.get("item_dropped_reasons_count")
-        item['response_received_count'] = stats.get("response_received_count")
-        item["finaly_insert_item"] = stats.get("finaly_insert_item")
-        item["finaly_find_ids"] = stats.get("finaly_find_ids")
-        item["time_secodes_consum"] = stats.get("time_secodes_consum")
+        item['startTime'] = stats.get("startTime")
+        item['finishTime'] = stats.get("finishTime")
+        item['finishReason'] = stats.get("finishReason")
+        item['itemScrapedCount'] = stats.get("itemScrapedCount")
+        item['responseReceivedCount'] = stats.get("responseReceivedCount")
+        item['itemDroppedCount'] = stats.get("itemDroppedCount")
+        item['responseReceivedCount'] = stats.get("responseReceivedCount")
+        item["finalFindIds"] = stats.get("finalFindIds")
+        item["finalFindIds"] = stats.get("finalFindIds")
+        # item["time_secodes_consum"] = stats.get("time_secodes_consum")
         return item
 
     def save_db(self, item):

@@ -50,12 +50,12 @@ class IfengSpider(scrapy.Spider):
             # print(plan)
             # query_word = plan["areas"] + plan["events"] + plan["persons"]
             query_word = "杀人"
-            plan_name = plan["plan_name"]
+            plan_name = plan["planName"]
             print(query_word)
             url = self.sogou_url_temp.format(self.start_uri, query_word, "1")
             print(url)
             yield scrapy.Request(url, callback=self.parse, dont_filter=True,
-                                 meta={"query_word": query_word, "plan_name": plan_name})
+                                 meta={"query_word": query_word, "planName": plan_name})
 
     def parse(self, response):
         news_list = response.xpath("//div[@class='results']/div//h3/a")
@@ -63,7 +63,7 @@ class IfengSpider(scrapy.Spider):
         for a in news_list:
             a_href = a.xpath("./@href").extract_first()
             yield scrapy.Request(a_href, callback=self.parse_news, dont_filter=True,
-                                 meta={"plan_name": response.meta["plan_name"]})
+                                 meta={"planName": response.meta["planName"]})
 
         # 获取下一页新闻
         next_url = response.xpath("//a[@class='np']/@href").extract_first()
@@ -72,29 +72,29 @@ class IfengSpider(scrapy.Spider):
             next_url = response.urljoin(next_url)
             print('=====>', next_url)
             yield scrapy.Request(next_url, callback=self.parse, dont_filter=True,
-                                 meta={"plan_name": response.meta["plan_name"]})
+                                 meta={"planName": response.meta["planName"]})
 
     def parse_news(self, response):
         news_id = response.request.url.split("/")[-1]
         self.news_comments_dict[news_id] = []
 
         item_loader = NewsItemLoader(item=NewsItem(), response=response)
-        item_loader.add_value("news_id", news_id)
-        item_loader.add_xpath("news_title", "//h1/text()")
-        item_loader.add_xpath("news_ori_title", "//p[contains(text(), '原标题')]/text()")
-        item_loader.add_value("news_url", response.request.url)
-        item_loader.add_xpath("news_time",
+        item_loader.add_value("newsId", news_id)
+        item_loader.add_xpath("newsTitle", "//h1/text()")
+        item_loader.add_xpath("newsOriTitle", "//p[contains(text(), '原标题')]/text()")
+        item_loader.add_value("newsUrl", response.request.url)
+        item_loader.add_xpath("newsTime",
                               "//div[contains(@class,'info') or contains(@class,'caption') or contains(@id,'artical')]/p/span/text()")
-        item_loader.add_value("news_source", response.request.url)
-        item_loader.add_xpath("news_reported_department",
+        item_loader.add_value("newsSource", response.request.url)
+        item_loader.add_xpath("newsReportedDepartment",
                               "//span[contains(@itemprop, 'publisher') or contains(@class, 'source')]//text()")
-        item_loader.add_xpath("news_reporter", "//p[contains(text(), '记者')]/text()")
-        item_loader.add_xpath("news_content",
+        item_loader.add_xpath("newsReporter", "//p[contains(text(), '记者')]/text()")
+        item_loader.add_xpath("newsContent",
                               "//div[contains(@id,'content') or contains(@id,'artical') or contains(@class, 'text')]//p/text()")
-        item_loader.add_xpath("news_editor", "//p[contains(text(),'责任编辑') or contains(text(),'责编')]/text()")
-        item_loader.add_value("news_keyword", "")
+        item_loader.add_xpath("newsEditor", "//p[contains(text(),'责任编辑') or contains(text(),'责编')]/text()")
+        item_loader.add_value("newsKeyword", "")
         # item_loader.add_value("news_comments", [])
-        item_loader.add_value("plan_name", response.meta["plan_name"])
+        item_loader.add_value("planName", response.meta["planName"])
         item = item_loader.load_item()
 
         yield scrapy.Request(self.comment_url_temp.format(news_id, "1"), callback=self.parse_comment_num,
@@ -103,22 +103,23 @@ class IfengSpider(scrapy.Spider):
     def parse_comment_num(self, response):
         """获取评论的总数量"""
         item = response.meta["item"]
-        news_id = item["news_id"]
+        news_id = item["newsId"]
         data = json.loads(response.body.decode(response.encoding))
         comment_total_num = data["count"] if isinstance(data["count"], int) else int(data["count"])
         print(comment_total_num)
         total_page_no = comment_total_num // 20 + 1
         item_loader = NewsItemLoader(item=item)
-        item_loader.add_value("news_comments_num", comment_total_num)
-        item_loader.add_value("news_comments_total_page_no", total_page_no)
+        item_loader.add_value("newsCommentsNum", comment_total_num)
+        item_loader.add_value("newsCommentsTotalPageNo", total_page_no)
         item = item_loader.load_item()
 
         # 如果没有评论，就保存item
         if comment_total_num == 0:
             print("parse_comment_num  保存！ 保存！ 保存！")
-            item["news_comments"] = self.news_comments_dict[news_id]
-            item["create_time"] = datetime.now()
-            item["crawler_number"] = 1
+            item["newsComments"] = self.news_comments_dict[news_id]
+            item["createTime"] = datetime.now()
+            item["updateTime"] = datetime.now()
+            item["crawlerNumber"] = 1
 
             # print(item)
             yield item
@@ -127,15 +128,15 @@ class IfengSpider(scrapy.Spider):
                                  dont_filter=True)
 
     def parse_one_comment(self, comment_loader, comment, data=None):
-        comment_loader.add_value("comment_id", comment["comment_id"])
+        comment_loader.add_value("commentId", comment["comment_id"])
         comment_loader.add_value("content", comment["comment_contents"])
-        comment_loader.add_value("comment_time", comment["comment_date"])
-        comment_loader.add_value("support_count", comment["uptimes"])
-        comment_loader.add_value("against_count", "")
-        comment_loader.add_value("reviewers_id", comment["user_id"])
-        comment_loader.add_value("reviewers_addr", comment["ip_from"])
-        comment_loader.add_value("reviewers_nickname", comment["uname"])
-        comment_loader.add_value("parent_id", comment["quote_id"])
+        comment_loader.add_value("commentTime", comment["comment_date"])
+        comment_loader.add_value("supportCount", comment["uptimes"])
+        comment_loader.add_value("againstCount", "")
+        comment_loader.add_value("reviewersId", comment["user_id"])
+        comment_loader.add_value("reviewersAddr", comment["ip_from"])
+        comment_loader.add_value("reviewersNickname", comment["uname"])
+        comment_loader.add_value("parentId", comment["quote_id"])
         comment_dict = comment_loader.load_item()
 
         return comment_dict
@@ -144,12 +145,12 @@ class IfengSpider(scrapy.Spider):
         """获取评论信息"""
         item = response.meta["item"]
         # 获取新闻id
-        news_id = item["news_id"]
+        news_id = item["newsId"]
         # 获取总评论数量
-        comment_total_num = item["news_comments_num"]
-        print("comment_total_num", type(comment_total_num))
+        comment_total_num = item["newsCommentsNum"]
+        print("newsCommentsNum", type(comment_total_num))
         # 获取全部页码数量
-        total_page_no = item["news_comments_total_page_no"]
+        total_page_no = item["newsCommentsTotalPageNo"]
 
         # 获取当前评论页码
         now_page_no = re.findall(r"&p=(\d+)&pageSize", response.request.url)
@@ -180,14 +181,15 @@ class IfengSpider(scrapy.Spider):
         # 获取下一页评论
         next_page_no = now_page_no + 1
         if next_page_no <= total_page_no:
-            next_comment_url = self.comment_url_temp.format(item["news_id"], str(next_page_no))
+            next_comment_url = self.comment_url_temp.format(item["newsId"], str(next_page_no))
             yield scrapy.Request(next_comment_url, callback=self.parse_comment, meta={"item": item})
 
         # 保存
         if len(self.news_comments_dict[news_id]) >= comment_total_num:
             print("parse_comment   保存！ 保存！ 保存！")
-            item["news_comments"] = self.news_comments_dict[news_id]
-            item["create_time"] = datetime.now()
-            item["crawler_number"] = 1
+            item["newsComments"] = self.news_comments_dict[news_id]
+            item["createTime"] = datetime.now()
+            item["updateTime"] = datetime.now()
+            item["crawlerNumber"] = 1
 
             yield item

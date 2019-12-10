@@ -13,52 +13,49 @@ from YuQing.loaders.processors import *
 
 
 class NewsItem(Item):
-    collection_exception = 'exception_field'
+    collection_exception = 'exceptionField'
 
-    news_url = Field()
-    news_id = Field()  # 新增news_id
-    news_title = Field(input_processor=MapCompose(str.strip))  # 新闻标题
-    news_ori_title = Field(input_processor=MapCompose(str_replace))  # 新闻原标题
-    news_time = Field(input_processor=Compose(deal_time))  # 新闻发布时间
-    news_source = Field(input_processor=MapCompose(split_url))  # 新闻来源
-    news_reported_department = Field()  # 新闻报道部门
-    news_reporter = Field(output_processor=Compose(str_replace), input_processor=Compose(deal_author))  # 记者
-    news_content = Field(input_processor=Compose(delete_blank))  # 新闻内容
-    news_editor = Field(input_processor=MapCompose(str_replace))  # 责任编辑
-    news_keyword = Field(input_processor=Compose(delete_blank))  # 关键词
+    newsUrl = Field()
+    newsId = Field()  # 新增news_id
+    newsTitle = Field(input_processor=MapCompose(str.strip))  # 新闻标题
+    newsOriTitle = Field(input_processor=MapCompose(str_replace))  # 新闻原标题
+    newsTime = Field(input_processor=Compose(deal_time))  # 新闻发布时间
+    newsSource = Field(input_processor=MapCompose(split_url))  # 新闻来源
+    newsReportedDepartment = Field()  # 新闻报道部门
+    newsReporter = Field(output_processor=Compose(str_replace), input_processor=Compose(deal_author))  # 记者
+    newsContent = Field(input_processor=Compose(delete_blank))  # 新闻内容
+    newsEditor = Field(input_processor=MapCompose(str_replace))  # 责任编辑
+    newsKeyword = Field(input_processor=Compose(delete_blank))  # 关键词
 
-    news_read_num = Field(input_processor=MapCompose(str_to_int))  # 阅读人数
-    news_comments_num = Field(input_processor=MapCompose(str_to_int))  # 评论人数
-    news_comments = Field(out_processor=Identity())  # 新闻评论内容
-    news_comments_total_page_no = Field()  # 新增
-    plan_name = Field()
+    newsReadNum = Field(input_processor=MapCompose(str_to_int))  # 阅读人数
+    newsCommentsNum = Field(input_processor=MapCompose(str_to_int))  # 评论人数
+    newsComments = Field(out_processor=Identity())  # 新闻评论内容
+    newsCommentsTotalPageNo = Field()  # 新增
+    planName = Field()
 
-    crawler_number = Field()  # 爬虫次数，最多3次
-    create_time = Field()  # 爬虫更新时间，最多3条
+    crawlerNumber = Field()  # 爬虫次数，最多3次
+    createTime = Field()  # 爬虫更新时间，最多3条
+    updateTime = Field()  # 爬虫更新时间，最多3条
 
     error = Field()
-
-    try_name = Field(output_processor=Identity())
 
 
 class CommentsItem(Item):
     """评论列表"""
-    comment_id = Field()  # 评论id
+    commentId = Field()  # 评论id
     content = Field(input_processor=MapCompose(str_replace))  # 评论内容
-    comment_time = Field(input_processor=MapCompose(deal_time))  # 评论时间
-    support_count = Field()  # 评论支持数(点赞)
-    against_count = Field()  # 评论反对数(踩)
-    reviewers_id = Field()  # 评论者id
-    reviewers_addr = Field(input_processor=MapCompose(str_replace))  # 评论者所属地
-    reviewers_nickname = Field(input_processor=MapCompose(str_replace))  # 评论者昵称
-    # ip_loc = Field()  # 评论者ip
-
-    parent_id = Field()  # 父级评论id串，以减号"-"相隔
+    commentTime = Field(input_processor=MapCompose(deal_time))  # 评论时间
+    supportCount = Field()  # 评论支持数(点赞)
+    againstCount = Field()  # 评论反对数(踩)
+    reviewersId = Field()  # 评论者id
+    reviewersAddr = Field(input_processor=MapCompose(str_replace))  # 评论者所属地
+    reviewersNickname = Field(input_processor=MapCompose(str_replace))  # 评论者昵称
+    parentId = Field()  # 父级评论id串，以减号"-"相隔
 
 
 class ErrorItem(Item):
     """出现异常的spider数据"""
-    collection = 'exception_spider'
+    collection = 'exceptionSpider'
     title = Field()
     url = Field()
     type = Field()
@@ -68,15 +65,15 @@ class ErrorItem(Item):
 
 class StatsItem(Item):
     """数据收集"""
-    collection = 'scrapy_stats'
+    collection = 'scrapyStats'
 
-    start_time = Field()
-    finish_time = Field()
-    finish_reason = Field()
-    item_scraped_count = Field()
-    response_received_count = Field()
-    item_dropped_count = Field()
-    # item_dropped_reasons = Field()
-    finaly_insert_item = Field()
-    finaly_find_ids = Field()
-    time_secodes_consum = Field()
+    startTime = Field()
+    finishTime = Field()
+    finishReason = Field()
+    itemScrapedCount = Field()
+    responseReceivedCount = Field()
+    itemDroppedCount = Field()
+    # itemDroppedReasons = Field()
+    finalyInsertItem = Field()
+    finalFindIds = Field()
+    # timeSecodesConsNum = Field()

@@ -50,12 +50,12 @@ class PeopleSpider(scrapy.Spider):
             # print(plan)
             # query_word = plan["areas"] + plan["events"] + plan["persons"]
             query_word = "杀人"
-            plan_name = plan["plan_name"]
+            plan_name = plan["planName"]
             print(query_word)
             url = self.sogou_url_temp.format(self.start_uri, query_word, "1")
             print(url)
             yield scrapy.Request(url, callback=self.parse, dont_filter=True,
-                                 meta={"query_word": query_word, "plan_name": plan_name})
+                                 meta={"query_word": query_word, "planName": plan_name})
 
     def parse(self, response):
         news_list = response.xpath("//div[@class='results']/div//h3/a")
@@ -63,7 +63,7 @@ class PeopleSpider(scrapy.Spider):
         for a in news_list:
             a_href = a.xpath("./@href").extract_first()
             yield scrapy.Request(a_href, callback=self.parse_news, dont_filter=True,
-                                 meta={"plan_name": response.meta["plan_name"]})
+                                 meta={"planName": response.meta["planName"]})
 
         # 获取下一页新闻
         next_url = response.xpath("//a[@class='np']/@href").extract_first()
@@ -72,23 +72,23 @@ class PeopleSpider(scrapy.Spider):
             next_url = response.urljoin(next_url)
             print('=====>', next_url)
             yield scrapy.Request(next_url, callback=self.parse, dont_filter=True,
-                                 meta={"plan_name": response.meta["plan_name"]})
+                                 meta={"planName": response.meta["planName"]})
 
     def parse_news(self, response):
         """解析新闻"""
         item_loader = NewsItemLoader(item=NewsItem(), response=response)
-        item_loader.add_xpath("news_title", "//h1/text()")
-        item_loader.add_xpath("news_ori_title", "//div[contains(text(), '原标题')]/text()")
-        item_loader.add_value("news_url", response.request.url)
-        item_loader.add_xpath("news_time", "//div[@class='box01']/div[@class='fl']/text()")
-        item_loader.add_value("news_source", response.request.url)
-        item_loader.add_xpath("news_reported_department", "//div[@class='box01']/div[@class='fl']/a/text()")
-        item_loader.add_xpath("news_reporter", "//p[@class='author']/text()")
-        item_loader.add_xpath("news_content", "//div[@class='box_con']//p/text()")
-        item_loader.add_xpath("news_editor", "//div[contains(text(),'责任编辑') or contains(text(),'责编')]/text()")
-        item_loader.add_value("news_keyword", "")
-        # item_loader.add_value("news_comments", [])
-        item_loader.add_value("plan_name", response.meta["plan_name"])
+        item_loader.add_xpath("newsTitle", "//h1/text()")
+        item_loader.add_xpath("newsOriTitle", "//div[contains(text(), '原标题')]/text()")
+        item_loader.add_value("newsUrl", response.request.url)
+        item_loader.add_xpath("newsTime", "//div[@class='box01']/div[@class='fl']/text()")
+        item_loader.add_value("newsSource", response.request.url)
+        item_loader.add_xpath("newsReportedDepartment", "//div[@class='box01']/div[@class='fl']/a/text()")
+        item_loader.add_xpath("newsReporter", "//p[@class='author']/text()")
+        item_loader.add_xpath("newsContent", "//div[@class='box_con']//p/text()")
+        item_loader.add_xpath("newsEditor", "//div[contains(text(),'责任编辑') or contains(text(),'责编')]/text()")
+        item_loader.add_value("newsKeyword", "")
+        # item_loader.add_value("newsComments", [])
+        item_loader.add_value("planName", response.meta["planName"])
         item = item_loader.load_item()
 
         comment_url = response.xpath("//div[@class='message']/a/@href").extract_first()
@@ -110,17 +110,18 @@ class PeopleSpider(scrapy.Spider):
 
         item = response.meta["item"]
         item_loader = NewsItemLoader(item=item, response=response)
-        item_loader.add_value("news_id", news_id)
-        item_loader.add_xpath("news_read_num", "//span[@class='readNum']/text()")
-        item_loader.add_xpath("news_comments_total_page_no", "//div[@class='pageBar']/@pagecount")
-        item_loader.add_value("news_comments_num", news_comments_num)
+        item_loader.add_value("newsId", news_id)
+        item_loader.add_xpath("newsReadNum", "//span[@class='readNum']/text()")
+        item_loader.add_xpath("newsCommentsTotalPageNo", "//div[@class='pageBar']/@pagecount")
+        item_loader.add_value("newsCommentsNum", news_comments_num)
         item = item_loader.load_item()
 
-        if item["news_comments_num"] == "0" or item["news_comments_num"] == 0:
+        if item["newsCommentsNum"] == "0" or item["newsCommentsNum"] == 0:
             print("parse_comment_num  保存！ 保存！ 保存！")
-            item["news_comments"] = self.news_comments_dict[news_id]
-            item["create_time"] = datetime.now()
-            item["crawler_number"] = 1
+            item["newsComments"] = self.news_comments_dict[news_id]
+            item["createTime"] = datetime.now()
+            item["updateTime"] = datetime.now()
+            item["crawlerNumber"] = 1
             # print(item)
             yield item
         else:
@@ -129,7 +130,7 @@ class PeopleSpider(scrapy.Spider):
                                  meta={"item": item}, dont_filter=True)
 
     def parse_one_comment(self, comment_loader, comment=None, data=None):
-        comment_loader.add_xpath("reviewers_nickname", "./p/a[@class='userNick']/text()")
+        comment_loader.add_xpath("reviewersNickname", "./p/a[@class='userNick']/text()")
         comment_loader.add_xpath("content", "./p/a[@class='treeReply']/text()")
         comment_dict = comment_loader.load_item()
         return comment_dict
@@ -138,11 +139,11 @@ class PeopleSpider(scrapy.Spider):
         """获取评论信息"""
         item = response.meta["item"]
         # 获取新闻id
-        news_id = item["news_id"]
+        news_id = item["newsId"]
         # 获取总评论数量
-        comment_total_num = item["news_comments_num"]
+        comment_total_num = item["newsCommentsNum"]
         # 获取全部评论页码
-        total_page_no = item.get("news_comments_total_page_no") if item.get("news_comments_total_page_no") else 0
+        total_page_no = item.get("newsCommentsTotalPageNo") if item.get("newsCommentsTotalPageNo") else 0
 
         # 获取当前评论页码
         now_page_no = response.request.url.split("_")[-1].split(".")[0]
@@ -171,8 +172,9 @@ class PeopleSpider(scrapy.Spider):
         # 保存 todo 如果本页没有获取到数据怎么办？
         if len(self.news_comments_dict[news_id]) >= comment_total_num:
             print("parse_comment   保存！ 保存！ 保存！")
-            item["news_comments"] = self.news_comments_dict[news_id]
-            item["create_time"] = datetime.now()
-            item["crawler_number"] = 1
+            item["newsComments"] = self.news_comments_dict[news_id]
+            item["createTime"] = datetime.now()
+            item["updateTime"] = datetime.now()
+            item["crawlerNumber"] = 1
 
             yield item

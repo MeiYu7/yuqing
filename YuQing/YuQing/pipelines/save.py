@@ -21,4 +21,4 @@ class MongoDBPipeline(object):
             print("save one>>>")
 
     def save_db(self, item):
-        self.mongo_db[self.collection].update_one({'news_url': item['news_url']}, {'$set': item}, upsert=True)
+        self.mongo_db[self.collection].update_one({'newsUrl': item['newsUrl']}, {'$set': item}, upsert=True)

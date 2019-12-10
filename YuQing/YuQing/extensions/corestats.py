@@ -19,19 +19,19 @@ class CoreStats(object):
         return o
 
     def spider_opened(self, spider):
-        self.stats.set_value('start_time', datetime.datetime.now(), spider=spider)
+        self.stats.set_value('startTime', datetime.datetime.now(), spider=spider)
 
     def spider_closed(self, spider, reason):
-        self.stats.set_value('finish_time', datetime.datetime.now(), spider=spider)
-        self.stats.set_value('finish_reason', reason, spider=spider)
+        self.stats.set_value('finishTime', datetime.datetime.now(), spider=spider)
+        self.stats.set_value('finishReason', reason, spider=spider)
 
     def item_scraped(self, item, spider):
-        self.stats.inc_value('item_scraped_count', spider=spider)
+        self.stats.inc_value('itemScrapedCount', spider=spider)
 
     def response_received(self, spider):
-        self.stats.inc_value('response_received_count', spider=spider)
+        self.stats.inc_value('responseReceivedCount', spider=spider)
 
     def item_dropped(self, item, spider, exception):
         # reason = exception.__class__.__name__
-        self.stats.inc_value('item_dropped_count', spider=spider)
+        self.stats.inc_value('itemDroppedCount', spider=spider)
         # self.stats.inc_value('item_dropped_reasons_count/%s' % reason, spider=spider)

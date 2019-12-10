@@ -18,12 +18,13 @@ class AddPlans(object):
         """链接mongodb"""
         self._client = pymongo.MongoClient("mongodb://localhost:27017")
         self._db = self._client["yuqings"]
-        self.col = self._db["plans"]
+        self.col = self._db["plan"]
 
     def add_plan(self):
-        """添加计划"""; self.connect_mongo()
+        """添加计划"""
+        self.connect_mongo()
         data = {
-            "plan_name": self.plan_name,
+            "planName": self.plan_name,
             "areas": self.areas,
             "persons": self.persons,
             "events": self.events,

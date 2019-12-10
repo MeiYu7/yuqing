@@ -19,11 +19,11 @@ class NewsItemCheck(object):
     def fields(self, item, spider):
         f = spider.settings.get('CHECK_FIELDS')  # settings配置字段，需要检查的字段类型为列表
         if not f:
-            f = ['news_time', 'news_content', 'news_title']
+            f = ['newsTime', 'newsContent', 'newsTitle']
         EXCEPTION_FIELD = '字段%s异常;异常类型:%s;异常内容:%s'
         EXCEPTION_CONTENT = []
         for i in f:
-            if i == "news_time":
+            if i == "newsTime":
                 time_date = item.get(i)
                 filter_time = spider.settings.get("FILTER_TIME")
                 if isinstance(time_date, str) and int(time_date[:4]) <= int(filter_time[:4]):

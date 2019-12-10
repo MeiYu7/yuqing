@@ -49,12 +49,12 @@ class TencentSpider(scrapy.Spider):
             # print(plan)
             # query_word = plan["areas"] + plan["events"] + plan["persons"]
             query_word = "杀人"
-            plan_name = plan["plan_name"]
+            plan_name = plan["planName"]
             print(query_word)
             url = self.sogou_url_temp.format(self.start_uri, query_word, "1")
             print(url)
             yield scrapy.Request(url, callback=self.parse, dont_filter=True,
-                                 meta={"query_word": query_word, "plan_name": plan_name})
+                                 meta={"query_word": query_word, "planName": plan_name})
 
     def parse(self, response):
         news_list = response.xpath("//div[@class='results']/div//h3/a")
@@ -62,7 +62,7 @@ class TencentSpider(scrapy.Spider):
         for a in news_list:
             a_href = a.xpath("./@href").extract_first()
             yield scrapy.Request(a_href, callback=self.parse_news, dont_filter=True,
-                                 meta={"plan_name": response.meta["plan_name"]})
+                                 meta={"planName": response.meta["planName"]})
 
         # 获取下一页新闻
         next_url = response.xpath("//a[@class='np']/@href").extract_first()
@@ -71,42 +71,43 @@ class TencentSpider(scrapy.Spider):
             next_url = response.urljoin(next_url)
             print('=====>', next_url)
             yield scrapy.Request(next_url, callback=self.parse, dont_filter=True,
-                                 meta={"plan_name": response.meta["plan_name"]})
+                                 meta={"planName": response.meta["planName"]})
 
     def parse_news(self, response):
         # news_id = response.request.url.split('/')[-1].split('.')[0]
 
         item_loader = NewsItemLoader(item=NewsItem(), response=response)
-        item_loader.add_xpath("news_title", "//h1/text()")
-        item_loader.add_xpath("news_ori_title", "//p[contains(text(), '原标题')]/text()")
-        item_loader.add_value("news_url", response.request.url)
-        item_loader.add_xpath("news_time", "//span[@class='a_time']/text()")
+        item_loader.add_xpath("newsTitle", "//h1/text()")
+        item_loader.add_xpath("newsOriTitle", "//p[contains(text(), '原标题')]/text()")
+        item_loader.add_value("newsUrl", response.request.url)
+        item_loader.add_xpath("newsTime", "//span[@class='a_time']/text()")
         if not response.xpath("//span[@class='a_time']/text()").extract_first():
-            item_loader.add_xpath("news_time", "//meta[@name='apub:time']/@content")
-        item_loader.add_value("news_source", response.request.url)
-        item_loader.add_xpath("news_reported_department", "//span[@class='a_source']//text()")
-        item_loader.add_xpath("news_reporter", "//span[@class='a_author']/text()")
-        item_loader.add_xpath("news_content",
+            item_loader.add_xpath("newsTime", "//meta[@name='apub:time']/@content")
+        item_loader.add_value("newsSource", response.request.url)
+        item_loader.add_xpath("newsReportedDepartment", "//span[@class='a_source']//text()")
+        item_loader.add_xpath("newsReporter", "//span[@class='a_author']/text()")
+        item_loader.add_xpath("newsContent",
                               "//div[contains(@class,'content') or @bosszone='content']//p[not(script) and not(style)]//text()")
-        item_loader.add_value("news_editor", re.findall(r"editor:'(.*?)'", response.body.decode(response.encoding)))
-        item_loader.add_value("news_keyword", re.findall(r"tags:(\[.*?\]),", response.body.decode(response.encoding)))
-        item_loader.add_value("plan_name", response.meta["plan_name"])
+        item_loader.add_value("newsEditor", re.findall(r"editor:'(.*?)'", response.body.decode(response.encoding)))
+        item_loader.add_value("newsKeyword", re.findall(r"tags:(\[.*?\]),", response.body.decode(response.encoding)))
+        item_loader.add_value("planName", response.meta["planName"])
         item = item_loader.load_item()
 
         comment_ids = re.findall(r'cmt_id[ =]+(\d+);|"comment_id": "(\d+)"', response.body.decode(response.encoding))
         if len(comment_ids) > 0:
             for cmt_id in comment_ids[0]:
                 if cmt_id != "":
-                    item["news_id"] = cmt_id
+                    item["newsId"] = cmt_id
                     self.news_comments_dict[cmt_id] = []
                     num_url = self.comment_num_temp.format(cmt_id)
                     yield scrapy.Request(num_url, callback=self.parse_comment_num, meta={"item": item})
 
         else:
             print("本篇新闻没有评论")
-            item["news_comments"] = self.news_comments_dict[item["news_id"]]
-            item["create_time"] = datetime.now()
-            item["crawler_number"] = 1
+            item["newsComments"] = self.news_comments_dict[item["newsId"]]
+            item["createTime"] = datetime.now()
+            item["updateTime"] = datetime.now()
+            item["crawlerNumber"] = 1
             yield item
 
     def parse_comment_num(self, response):
@@ -119,25 +120,26 @@ class TencentSpider(scrapy.Spider):
 
         if comment_total_num == 0:
             print("parse_comment_num  保存！ 保存！ 保存！")
-            item["news_comments"] = self.news_comments_dict[item["news_id"]]
-            item["create_time"] = datetime.now()
-            item["crawler_number"] = 1
+            item["newsComments"] = self.news_comments_dict[item["newsId"]]
+            item["createTime"] = datetime.now()
+            item["updateTime"] = datetime.now()
+            item["crawlerNumber"] = 1
             yield item
         else:
-            yield scrapy.Request(self.comment_url_temp.format(item["news_id"], 0),
+            yield scrapy.Request(self.comment_url_temp.format(item["newsId"], 0),
                                  callback=self.parse_comment,
                                  meta={"item": item})
 
     def parse_one_comment(self, comment_loader, comment, data=None):
-        comment_loader.add_value("comment_id", comment["id"])
-        comment_loader.add_value("parent_id", comment["parent"])
-        comment_loader.add_value("comment_time", FormatTime().format_time_stamp(int(comment["time"])))
+        comment_loader.add_value("commentId", comment["id"])
+        comment_loader.add_value("parentId", comment["parent"])
+        comment_loader.add_value("commentTime", FormatTime().format_time_stamp(int(comment["time"])))
         comment_loader.add_value("content", comment["content"])
-        comment_loader.add_value("support_count", comment["up"])
-        comment_loader.add_value("against_count", "")
-        comment_loader.add_value("reviewers_id", comment["userid"])
-        comment_loader.add_value("reviewers_nickname", data["userList"][comment["userid"]]["nick"])
-        comment_loader.add_value("reviewers_addr", data["userList"][comment["userid"]]["region"])
+        comment_loader.add_value("supportCount", comment["up"])
+        comment_loader.add_value("againstCount", "")
+        comment_loader.add_value("reviewersId", comment["userid"])
+        comment_loader.add_value("reviewersNickname", data["userList"][comment["userid"]]["nick"])
+        comment_loader.add_value("reviewersAddr", data["userList"][comment["userid"]]["region"])
         comment_dict = comment_loader.load_item()
         return comment_dict
 
@@ -145,10 +147,10 @@ class TencentSpider(scrapy.Spider):
         """获取评论信息"""
         item = response.meta["item"]
         # 获取新闻id
-        news_id = item["news_id"]
+        news_id = item["newsId"]
         # 获取总评论数量
-        comment_total_num = item["news_comments_num"]
-        print("comment_total_num", type(comment_total_num))
+        comment_total_num = item["newsCommentsNum"]
+        # print("comment_total_num", type(comment_total_num))
         # 获取全部页码数量
         # total_page_no = item["news_comments_total_page_no"]
 
@@ -170,14 +172,15 @@ class TencentSpider(scrapy.Spider):
 
         # 获取下一页
         if now_page_no != "":
-            next_comment_url = self.comment_url_temp.format(item["news_id"], now_page_no)
+            next_comment_url = self.comment_url_temp.format(item["newsId"], now_page_no)
             yield scrapy.Request(next_comment_url, callback=self.parse_comment, meta={"item": item})
 
         # 保存
         if len(self.news_comments_dict[news_id]) >= comment_total_num:
             print("parse_comment   保存！ 保存！ 保存！")
-            item["news_comments"] = self.news_comments_dict[news_id]
-            item["create_time"] = datetime.now()
-            item["crawler_number"] = 1
+            item["newsComments"] = self.news_comments_dict[news_id]
+            item["createTime"] = datetime.now()
+            item["updateTime"] = datetime.now()
+            item["crawlerNumber"] = 1
 
             yield item

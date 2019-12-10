@@ -54,7 +54,7 @@ DOWNLOAD_DELAY = 2
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
     # 'YuQing.middlewares.YuqingDownloaderMiddleware.YuqingDownloaderMiddleware': 0,
-    'YuQing.middlewares.RandomCookieMiddleware.RandomCookieMiddleware': 50,
+    # 'YuQing.middlewares.RandomCookieMiddleware.RandomCookieMiddleware': 50,
     'YuQing.middlewares.ProcessAllExceptionMiddleware.ProcessAllExceptionMiddleware': 100,
     # 'YuQing.middlewares.MoGuProxyMiddleware.MoGuProxyMiddleware': 100,
     'YuQing.middlewares.AntispiderRequestMiddleware.AntispiderRequestMiddleware': 100,
