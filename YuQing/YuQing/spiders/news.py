@@ -4,9 +4,11 @@ from datetime import datetime
 import re
 from scrapy import signals
 import json
+import logging
 import scrapy
 from YuQing.items import NewsItem
 from YuQing.loaders.loader import NewsItemLoader
+from YuQing.utils.parse_plan import ParsePlan
 
 
 class NewsSpider(scrapy.Spider):
@@ -15,18 +17,16 @@ class NewsSpider(scrapy.Spider):
     sogou_url_temp = 'https://news.sogou.com/news?query=site:{0} {1}&sort=1&page=1'  # sort 排序方式
     item = 0
 
-    # def __init__(self):
-    #     self.reader = ""
+    def __init__(self):
+        self.start_time = datetime.now()
+        self.news_comments_dict = dict()
 
     def spider_opened(self):
-        print("爬虫开始咯....")
-        self.start_time = datetime.now()
-        # f =  open(self.news_file, "rU")
-        # self.reader = csv.DictReader(f)
-        # f.close()
+        logging.info("<------{} spider starting ------>".format(self.start_time))
 
     def spider_closed(self):
-        print("抓到{}个新闻".format(self.item))
+        # print("抓到{}个新闻".format(self.item))
+        pass
 
     @classmethod
     def from_crawler(cls, crawler, *args, **kwargs):
@@ -41,23 +41,23 @@ class NewsSpider(scrapy.Spider):
         cls.allowed_domains.extend(settings.get('ALLOWED_DOMAINS'))
         cls.mongo_db = settings.get("DB_MONGO")
         cls.col = settings.get("DB_PLAN")
-        cls.news_file = settings.get("NEWS_FILE")
-        # cls.key_word = settings.get("TEST_KEYWORD")
+        cls.spider_web_map = settings.get("SPIDERNAME_WEB_MAP")
+        cls.project = settings.get("PLAN_PROJECT_SHOW")
 
     def start_requests(self):
-        plans = self.mongo_db[self.col].find()
+        plans = self.mongo_db[self.col].find({}, projection=self.project)
         for plan in plans:
-            # print(plan)
-            query_word = plan["areas"] + " " + plan["plan_name"] + " " + plan["events"]
-            print(query_word)
-            # query_word = self.key_word
-            with open(self.news_file, "rU") as f:
-                reader = csv.DictReader(f)
-                for line in reader:
-                    new_domains_uri = line.pop('new_domains_uri')
-                    self.allowed_domains.append(new_domains_uri)
-                    url = self.sogou_url_temp.format(new_domains_uri, query_word)
-                    yield scrapy.Request(url, callback=self.parse, meta={'fields': line})
+            logging.info("plan【{}】".format(plan))
+            query_word_list = ParsePlan(plan).run()
+            for query_word in query_word_list:
+                logging.info("query_word【{}】".format(query_word))
+                with open(self.news_file, "rU") as f:
+                    reader = csv.DictReader(f)
+                    for line in reader:
+                        new_domains_uri = line.pop('new_domains_uri')
+                        self.allowed_domains.append(new_domains_uri)
+                        url = self.sogou_url_temp.format(new_domains_uri, query_word)
+                        yield scrapy.Request(url, callback=self.parse, meta={'fields': line})
 
     def parse(self, response):
         news_list = response.xpath("//div[@class='results']/div//h3/a")

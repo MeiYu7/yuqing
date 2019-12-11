@@ -17,7 +17,7 @@ class NewsItem(Item):
 
     newsUrl = Field()
     newsId = Field()  # 新增news_id
-    newsTitle = Field(input_processor=MapCompose(str.strip))  # 新闻标题
+    newsTitle = Field(input_processor=MapCompose(str_replace))  # 新闻标题
     newsOriTitle = Field(input_processor=MapCompose(str_replace))  # 新闻原标题
     newsTime = Field(input_processor=Compose(deal_time))  # 新闻发布时间
     newsSource = Field()  # 新闻来源
