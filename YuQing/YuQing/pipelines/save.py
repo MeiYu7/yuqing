@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from YuQing.items import NewsItem
 
 
@@ -17,6 +19,10 @@ class MongoDBPipeline(object):
 
     def process_item(self, item, spider):
         if isinstance(item, NewsItem):
+            item["createTime"] = datetime.now()
+            item["updateTime"] = datetime.now()
+            item["crawlerNumber"] = 1
+            item["sensitive"] = 0  # 统一设置不敏感
             self.save_db(item)
 
     def save_db(self, item):

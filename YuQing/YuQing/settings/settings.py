@@ -18,7 +18,7 @@ USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, li
 
 ROBOTSTXT_OBEY = False
 
-CONCURRENT_REQUESTS = 1
+CONCURRENT_REQUESTS = 3
 
 DOWNLOAD_DELAY = 2
 
@@ -28,7 +28,7 @@ DOWNLOAD_DELAY = 2
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
     # 'YuQing.middlewares.YuqingDownloaderMiddleware.YuqingDownloaderMiddleware': 0,
-    # 'YuQing.middlewares.RandomCookieMiddleware.RandomCookieMiddleware': 50,
+    'YuQing.middlewares.RandomCookieMiddleware.SogouRandomCookieMiddleWare': 50,
     'YuQing.middlewares.ProcessAllExceptionMiddleware.ProcessAllExceptionMiddleware': 100,
     # 'YuQing.middlewares.MoGuProxyMiddleware.MoGuProxyMiddleware': 100,
     'YuQing.middlewares.AntispiderRequestMiddleware.AntispiderRequestMiddleware': 100,

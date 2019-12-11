@@ -20,7 +20,7 @@ class NewsItem(Item):
     newsTitle = Field(input_processor=MapCompose(str.strip))  # 新闻标题
     newsOriTitle = Field(input_processor=MapCompose(str_replace))  # 新闻原标题
     newsTime = Field(input_processor=Compose(deal_time))  # 新闻发布时间
-    newsSource = Field(input_processor=MapCompose(split_url))  # 新闻来源
+    newsSource = Field()  # 新闻来源
     newsReportedDepartment = Field()  # 新闻报道部门
     newsReporter = Field(output_processor=Compose(str_replace), input_processor=Compose(deal_author))  # 记者
     newsContent = Field(input_processor=Compose(delete_blank))  # 新闻内容
@@ -37,6 +37,8 @@ class NewsItem(Item):
     crawlerNumber = Field()  # 爬虫次数，最多3次
     createTime = Field()  # 爬虫更新时间，最多3条
     updateTime = Field()  # 爬虫更新时间，最多3条
+
+    sensitive = Field()  # 新闻敏感性
 
     error = Field()
 

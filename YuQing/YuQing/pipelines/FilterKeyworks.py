@@ -10,7 +10,7 @@ import re
 class FilterKeywordsPipeline(object):
 
     def process_item(self, item, spider):
-        print("<--------------FilterKeywordsPipeline---------------->")
+        # print("<--------------FilterKeywordsPipeline---------------->")
         if isinstance(item, NewsItem):
             NewsItemCheck().handel(item, spider)
         return item
