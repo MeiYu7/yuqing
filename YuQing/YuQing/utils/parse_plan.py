@@ -66,18 +66,19 @@ class ParsePlan(object):
 
 
 if __name__ == '__main__':
-    plan = {'planName': '方案一',
-            'areas': '河南 扶沟',
-            'persons': '李主任',
-            'events': '投诉 告状 打人',
-            'exclude': '广告',
-            'relationship': '0001',
+    plan = {
+            "planName": "新冠肺炎",
+            "areas": "河南",
+            "persons": "张",
+            "events": "补贴 不作为 贪污 物质匮乏",
+            "exclude": "",
+            "relationship": "0000",
             'createTime': datetime.datetime(2019, 12, 10, 6, 33, 50, 571000),
             'updateTime': datetime.datetime(2019, 12, 10, 6, 33, 50, 571000),
             '_class': 'com.yzkj.zf.entity.Plan'
             }
 
-    p = ParsePlan(plan["areas"], plan["persons"], plan['events'], plan['exclude'], plan['relationship'])
+    p = ParsePlan(plan)
     res = p.run()
     # print(res)
     i = 1

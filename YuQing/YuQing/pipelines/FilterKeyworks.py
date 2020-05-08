@@ -63,6 +63,9 @@ class NewsItemCheck(object):
         key_words = item.get("planDetails").get(key).split(" ")
         key_words_re = item.get("planDetails").get("relationship")[index]
 
+        if len(item.get("planDetails").get(key)) == 0:
+            return
+
         # 排除关键词为或的关系
         if int(key_words_re) == 0:
             for ex_key in key_words:
@@ -87,6 +90,9 @@ class NewsItemCheck(object):
         """判断地域、人物、事件的与或关系"""
         key_words = item.get("planDetails").get(key).split(" ")
         key_words_re = item.get("planDetails").get("relationship")[index]
+
+        if len(item.get("planDetails").get(key)) == 0:
+            return
 
         # 关键词之间为或的关系
         if int(key_words_re) == 0:

@@ -33,6 +33,7 @@ class TencentSpider(scrapy.Spider):
 
     @classmethod
     def from_crawler(cls, crawler, *args, **kwargs):
+        kwargs.pop('_job')
         cls.from_settings(crawler.settings)
         spider = super(TencentSpider, cls).from_crawler(crawler, *args, **kwargs)
         crawler.signals.connect(spider.spider_opened, signals.spider_opened)

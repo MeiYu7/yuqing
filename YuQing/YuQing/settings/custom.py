@@ -32,10 +32,10 @@ FILTER_TIME = "2018-1-1"
 REDIS_URL = 'redis://localhost:6379'
 
 # 配置搜狗Cookie池的地址
-SOGOU_COOKIES_URL = 'http://localhost:5000/sogou/random'
+SOGOU_COOKIES_URL = 'http://localhost:5022/sogou/random'
 
 # Mongo URL
-MONGO_URI = 'mongodb://localhost:27017'
+MONGO_URI = 'mongodb://60.190.243.103:27222'
 MONGO_DATABASE = 'yuqings'
 COLLECTION_NEWS = 'warningInfo'
 MONGODB_ERROR = "scrapyError"
@@ -51,7 +51,7 @@ FEED_EXPORT_ENCODING = 'utf-8'  # 输出中文的编码格式
 # 日志模块
 # to_day = datetime.datetime.now()
 # log_file_path = "./log/scrapy_{}_{}_{}.log".format(to_day.year,to_day.month, to_day.day)
-# LOG_LEVEL = "DEBUG"
+LOG_LEVEL = "INFO"
 # LOG_FILE = log_file_path
 
 """保存数据的频率"""

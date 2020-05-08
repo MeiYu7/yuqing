@@ -7,7 +7,7 @@ class MongoDBPipeline(object):
 
     def __init__(self, mongo_db, collection):
         self.mongo_db = mongo_db
-        self.collection = collection
+        self.collection = "{0}_{1}".format(datetime.strftime(datetime.today(), "%Y%m"), collection)
 
     @classmethod
     def from_settings(cls, settings):
