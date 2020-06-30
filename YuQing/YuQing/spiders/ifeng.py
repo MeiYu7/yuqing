@@ -20,7 +20,7 @@ class IfengSpider(scrapy.Spider):
 
     comment_url_temp = "https://comment.ifeng.com/get.php?docUrl=ucms_{0}&job=1&p={1}&pageSize=20"
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         self.start_time = datetime.now()
         self.news_comments_dict = dict()
 
@@ -33,7 +33,8 @@ class IfengSpider(scrapy.Spider):
 
     @classmethod
     def from_crawler(cls, crawler, *args, **kwargs):
-        kwargs.pop('_job')
+        if kwargs.get("_job"):
+            kwargs.pop('_job')
         cls.from_settings(crawler.settings)
         spider = super(IfengSpider, cls).from_crawler(crawler, *args, **kwargs)
         crawler.signals.connect(spider.spider_opened, signals.spider_opened)

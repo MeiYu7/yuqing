@@ -1,3 +1,4 @@
+
 NEWS_FILE = './utils/news_xpath2.csv'
 
 ALLOWED_DOMAINS = ['sogou.com', 'qq.com', 'sohu.com', 'sina.com.cn', 'ifeng.com', '163.com', 'people.com.cn']
@@ -29,11 +30,13 @@ FILTER_TIME = "2018-1-1"
 # SCHEDULER_PERSIST = True  # redis持久化
 
 # Redis URL
-REDIS_URL = 'redis://localhost:6379'
+# REDIS_URL = 'redis://localhost:6379'
+REDIS_URL = 'redis://:12345678@192.168.2.222:6379'
 
 # 配置搜狗Cookie池的地址
+# SOGOU_COOKIES_URL = 'http://192.168.2.222:5000/sogou/random'
 SOGOU_COOKIES_URL = 'http://localhost:5022/sogou/random'
-
+#
 # Mongo URL
 MONGO_URI = 'mongodb://60.190.243.103:27222'
 MONGO_DATABASE = 'yuqings'
@@ -48,15 +51,13 @@ RETRY_TIMES = 3  # 重试3次
 
 FEED_EXPORT_ENCODING = 'utf-8'  # 输出中文的编码格式
 
-# 日志模块
-# to_day = datetime.datetime.now()
-# log_file_path = "./log/scrapy_{}_{}_{}.log".format(to_day.year,to_day.month, to_day.day)
-LOG_LEVEL = "INFO"
-# LOG_FILE = log_file_path
 
-"""保存数据的频率"""
+# 保存数据的频率
 SAVE_TIME_INTERVAL = 60
 SAVE_ITEM_CAPACITY = 100
 
 # 自定义过滤条件
 DONT_FILTER_REQUEST = False
+
+# 判断运行的文件
+CHECK_FILE = "isRunning.txt"

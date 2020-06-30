@@ -28,11 +28,11 @@ class NewsItemCheck(object):
                 filter_time = spider.settings.get("FILTER_TIME")
                 if isinstance(time_date, str) and int(time_date[:4]) <= int(filter_time[:4]):
                     EXCEPTION_CONTENT.append(EXCEPTION_FIELD % (i, type(time_date), "时间小于预定值"))
-                if isinstance(time_date, datetime.datetime) and time_date <= datetime.datetime.strptime(filter_time,
-                                                                                                        "%Y-%m-%d"):
+                if isinstance(time_date, datetime.datetime) \
+                        and time_date <= datetime.datetime.strptime(filter_time, "%Y-%m-%d"):
                     EXCEPTION_CONTENT.append(EXCEPTION_FIELD % (i, type(time_date), "时间小于预定值"))
             else:
-                if item.get(i) == "":
+                if item.get(i) is None or item.get(i) == "":
                     EXCEPTION_CONTENT.append(EXCEPTION_FIELD % (i, type(None), item.get(i)))
 
         if EXCEPTION_CONTENT != []:

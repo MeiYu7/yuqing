@@ -20,7 +20,7 @@ class SohuSpider(scrapy.Spider):
     souhu_read_url = 'http://v2.sohu.com/public-api/articles/{}/pv'
     comment_url_temp = "http://apiv2.sohu.com/api/comment/list?&page_size=30&page_no={page}&source_id=mp_{news_id}"
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         self.start_time = datetime.now()
         self.news_comments_dict = dict()
 
@@ -33,7 +33,8 @@ class SohuSpider(scrapy.Spider):
 
     @classmethod
     def from_crawler(cls, crawler, *args, **kwargs):
-        kwargs.pop('_job')
+        if kwargs.get("_job"):
+            kwargs.pop('_job')
         cls.from_settings(crawler.settings)
         spider = super(SohuSpider, cls).from_crawler(crawler, *args, **kwargs)
         crawler.signals.connect(spider.spider_opened, signals.spider_opened)
@@ -144,11 +145,9 @@ class SohuSpider(scrapy.Spider):
         comment_loader.add_value("reviewersAddr", comment["ip_location"])
 
         # 本条评论有父级评论
-        if len(comment["comments"]) > 0:
-            parent_comment_loader = NewsCommentsItemLoader(item=CommentsItem())
-            comment_dict = self.parse_one_comment(parent_comment_loader, comment)
-
-
+        # if len(comment["comments"]) > 0:
+        #     parent_comment_loader = NewsCommentsItemLoader(item=CommentsItem())
+        #     comment_dict = self.parse_one_comment(parent_comment_loader, comment)
 
         comment_dict = comment_loader.load_item()
 

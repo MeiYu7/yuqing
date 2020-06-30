@@ -43,7 +43,7 @@ class YuqingPipeline(object):
             self.insert_many_goods()
         self.client.close()
         print("最终插入{}条".format(self.insert_num))
-        self.stats.set_value("finaly_insert_item",self.insert_num )
+        self.stats.set_value("final_insert_item", self.insert_num)
         spider.logger.info("最终插入{}条".format(self.insert_num))
 
     def process_item(self, item, spider):

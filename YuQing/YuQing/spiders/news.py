@@ -17,7 +17,7 @@ class NewsSpider(scrapy.Spider):
     sogou_url_temp = 'https://news.sogou.com/news?query=site:{0} {1}&sort=1&page=1'  # sort 排序方式
     item = 0
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         self.start_time = datetime.now()
         self.news_comments_dict = dict()
 
@@ -30,7 +30,8 @@ class NewsSpider(scrapy.Spider):
 
     @classmethod
     def from_crawler(cls, crawler, *args, **kwargs):
-        kwargs.pop('_job')
+        if kwargs.get("_job"):
+            kwargs.pop('_job')
         cls.from_settings(crawler.settings)
         spider = super(NewsSpider, cls).from_crawler(crawler, *args, **kwargs)
         crawler.signals.connect(spider.spider_opened, signals.spider_opened)
@@ -85,4 +86,4 @@ class NewsSpider(scrapy.Spider):
 
         # print(item)
         self.item += 1
-        yield item
+        # yield item

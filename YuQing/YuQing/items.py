@@ -13,7 +13,8 @@ from YuQing.loaders.processors import *
 
 
 class NewsItem(Item):
-    collection_exception = 'exceptionField'
+    """新闻列表"""
+    collection_exception = 'spider_exception_field'
 
     newsUrl = Field()
     newsId = Field()  # 新增news_id
@@ -31,8 +32,8 @@ class NewsItem(Item):
     newsCommentsNum = Field(input_processor=MapCompose(str_to_int))  # 评论人数
     newsComments = Field(out_processor=Identity())  # 新闻评论内容
     newsCommentsTotalPageNo = Field()  # 新增
-    planName = Field()
-    planDetails = Field()
+    planName = Field()  # 方案名
+    planDetails = Field()  # 方案详情
 
     crawlerNumber = Field()  # 爬虫次数，最多3次
     createTime = Field()  # 爬虫更新时间，最多3条
@@ -77,6 +78,6 @@ class StatsItem(Item):
     responseReceivedCount = Field()
     itemDroppedCount = Field()
     # itemDroppedReasons = Field()
-    finalyInsertItem = Field()
+    finalInsertItem = Field()
     finalFindIds = Field()
-    # timeSecodesConsNum = Field()
+    # timeSecondsConsNum = Field()

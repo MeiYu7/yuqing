@@ -21,7 +21,7 @@ class SinaSpider(scrapy.Spider):
     comment_url_temp = "http://comment.sina.com.cn/page/info?format=json&channel={channel}&newsid={news_id}&ie=utf-8&oe=utf-8&page={page}&page_size=100"
     item = 0
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         self.start_time = datetime.now()
         self.news_comments_dict = dict()
 
@@ -34,7 +34,8 @@ class SinaSpider(scrapy.Spider):
 
     @classmethod
     def from_crawler(cls, crawler, *args, **kwargs):
-        kwargs.pop('_job')
+        if kwargs.get("_job"):
+            kwargs.pop('_job')
         cls.from_settings(crawler.settings)
         spider = super(SinaSpider, cls).from_crawler(crawler, *args, **kwargs)
         crawler.signals.connect(spider.spider_opened, signals.spider_opened)

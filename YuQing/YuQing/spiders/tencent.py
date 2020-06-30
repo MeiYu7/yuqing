@@ -20,7 +20,7 @@ class TencentSpider(scrapy.Spider):
     comment_num_temp = "https://coral.qq.com/article/{}/commentnum"
     comment_url_temp = "http://coral.qq.com/article/{}/comment/v2?orinum=30&oriorder=o&cursor={}"
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         self.start_time = datetime.now()
         self.news_comments_dict = dict()
 
@@ -33,7 +33,8 @@ class TencentSpider(scrapy.Spider):
 
     @classmethod
     def from_crawler(cls, crawler, *args, **kwargs):
-        kwargs.pop('_job')
+        if kwargs.get("_job"):
+            kwargs.pop('_job')
         cls.from_settings(crawler.settings)
         spider = super(TencentSpider, cls).from_crawler(crawler, *args, **kwargs)
         crawler.signals.connect(spider.spider_opened, signals.spider_opened)
@@ -82,7 +83,7 @@ class TencentSpider(scrapy.Spider):
         item_loader.add_xpath("newsTitle", "//h1/text()")
         item_loader.add_xpath("newsOriTitle", "//p[contains(text(), '原标题')]/text()")
         item_loader.add_value("newsUrl", response.request.url)
-        item_loader.add_xpath("newsTime", "//span[@class='a_time']/text()")
+        item_loader.add_xpath("newsTime", "//span[contains(@class, 'time')]/text()")
         if not response.xpath("//span[@class='a_time']/text()").extract_first():
             item_loader.add_xpath("newsTime", "//meta[@name='apub:time']/@content")
         item_loader.add_value("newsSource", self.spider_web_map.get(self.name))

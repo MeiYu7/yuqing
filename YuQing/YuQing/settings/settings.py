@@ -3,6 +3,7 @@
 # 添加搜索路径
 import os
 import sys
+import datetime
 
 BASE_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # BASE_PATH = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -52,6 +53,7 @@ ITEM_PIPELINES = {
     # 'YuQing.pipelines.save_pipelines.YuqingPipeline': 300,
     'YuQing.pipelines.field_check.FieldCheckPipeline': 100,
     'YuQing.pipelines.FilterKeyworks.FilterKeywordsPipeline': 200,
+    'YuQing.pipelines.convert_time_type.ConvertTimeType': 210,
     'YuQing.pipelines.save.MongoDBPipeline': 300
 
 }
@@ -63,3 +65,12 @@ DONT_FILTER_REQUEST = True
 
 # # 禁止重定向
 # REDIRECT_ENABLED = False
+
+# 启动全部爬虫配置
+COMMANDS_MODULE = 'YuQing.commands'
+
+# 日志模块
+to_day = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc)
+log_file_path = "./log/scrapy_{}_{}.log".format(to_day.year, to_day.month)
+LOG_LEVEL = "WARNING"
+LOG_FILE = log_file_path

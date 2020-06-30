@@ -12,5 +12,4 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 # execute('scrapy crawl neteasy'.split(" "))
 execute('scrapy crawl people'.split(" "))
 
-# execute('scrapy crawl neteasy_1'.split(" "))
-# execute('scrapy crawl news'.split(" "))
+# execute("scrapy crawlall".split())

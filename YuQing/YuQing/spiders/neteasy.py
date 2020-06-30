@@ -19,7 +19,7 @@ class NeteasySpider(scrapy.Spider):
     sogou_url_temp = 'https://news.sogou.com/news?query=site:{0} {1}&sort=1&page={2}'  # sort 排序方式
     comment_url_temp = "http://comment.api.163.com/api/v1/products/a2869674571f77b5a0867c3d71db5856/threads/{news_id}/comments/newList?limit=30&showLevelThreshold=72&offset={page}"
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         self.start_time = datetime.now()
         self.news_comments_dict = dict()
 
@@ -32,7 +32,8 @@ class NeteasySpider(scrapy.Spider):
 
     @classmethod
     def from_crawler(cls, crawler, *args, **kwargs):
-        kwargs.pop('_job')
+        if kwargs.get("_job"):
+            kwargs.pop('_job')
         cls.from_settings(crawler.settings)
         spider = super(NeteasySpider, cls).from_crawler(crawler, *args, **kwargs)
         crawler.signals.connect(spider.spider_opened, signals.spider_opened)
